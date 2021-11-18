@@ -75,7 +75,7 @@ class EventListener implements Listener
         if (count(Server::getInstance()->getOnlinePlayers()) - 1 == 0) {
             Main::getInstance()->antiCheatTask($this);
         }
-        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new NametagTask($event->getPlayer(), $this), 20);
+        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new NametagTask($event->getPlayer(), $this), 1);
         PlayerManager::$playerstatus[$event->getPlayer()->getName()] = PlayerManager::LOBBY;
         Main::getInstance()->getScheduler()->scheduleRepeatingTask(new ScoreboardTask($event->getPlayer()), 20);
     }

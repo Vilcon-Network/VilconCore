@@ -97,7 +97,7 @@ class Main extends PluginBase{
     }
 
     public function antiCheatTask(EventListener $listener){
-        $this->getScheduler()->scheduleRepeatingTask(new AntiCheatTask($listener, $this), 20);
+        $this->getScheduler()->scheduleRepeatingTask(new AntiCheatTask($listener, $this), 1);
     }
 
     public function onDisable(): void
