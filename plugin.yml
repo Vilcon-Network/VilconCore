@@ -1,0 +1,5 @@
+name: VilconCore
+version: 1.0.0DEV
+api: 4.0.0
+author: SandhyR
+main: SandhyR\VilconCore\Main
