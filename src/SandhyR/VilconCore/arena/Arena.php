@@ -9,6 +9,8 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use SandhyR\VilconCore\PlayerManager;
 use pocketmine\math\Vector3;
+use SandhyR\VilconCore\task\DuelTask;
+use SandhyR\VilconCore\Main;
 
 class Arena
 {
@@ -180,6 +182,7 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
                     }
                 }
                 break;
@@ -272,6 +275,7 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
                     }
                 }
                 break;
@@ -364,6 +368,7 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
                     }
                 }
                 break;
@@ -456,6 +461,8 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+
                     }
                 }
                 break;
@@ -548,6 +555,8 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+
                     }
                 }
                 break;
@@ -657,6 +666,7 @@ class Arena
                             }
                         }
                     }
+                    Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
                 }
         }
     }
@@ -763,6 +773,8 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+
                     }
                 }
                 break;
@@ -793,8 +805,8 @@ class Arena
                                 $manager = new KitManager();
                                 $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
                                 $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+                                $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                                $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
                                 $manager->sendDuelKit($p1, $id);
                                 $manager->sendDuelKit($p2, $id);
                                 unset(self::$rankqueue["fist"][0]);
@@ -811,8 +823,8 @@ class Arena
                                     $manager = new KitManager();
                                     $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
                                     $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+                                    $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                                    $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
                                     $manager->sendDuelKit($p1, $id);
                                     $manager->sendDuelKit($p2, $id);
                                     unset(self::$rankqueue["fist"][0]);
@@ -829,8 +841,8 @@ class Arena
                                         $manager = new KitManager();
                                         $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
                                         $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+                                        $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                                        $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
                                         $manager->sendDuelKit($p1, $id);
                                         $manager->sendDuelKit($p2, $id);
                                         unset(self::$rankqueue["fist"][0]);
@@ -847,8 +859,8 @@ class Arena
                                             $manager = new KitManager();
                                             $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
                                             $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+                                            $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                                            $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
                                             $manager->sendDuelKit($p1, $id);
                                             $manager->sendDuelKit($p2, $id);
                                             unset(self::$rankqueue["fist"][0]);
@@ -865,6 +877,8 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+
                     }
                 }
                 break;
@@ -967,6 +981,8 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+
                     }
                 }
                 break;
@@ -1069,6 +1085,8 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+
                     }
                 }
                 break;
@@ -1171,6 +1189,8 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+
                     }
                 }
                 break;
@@ -1286,7 +1306,9 @@ class Arena
                                 }
                             }
                         }
+                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
                     }
+
                 }
         }
 
