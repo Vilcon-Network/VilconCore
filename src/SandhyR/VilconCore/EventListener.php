@@ -398,6 +398,7 @@ class EventListener implements Listener
     }
 
     public function teleportLobby(Player $player){
+        PlayerManager::$playerstatus[$player->getName()] = PlayerManager::LOBBY;
         $player->setHealth(20);
         $player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(Main::getInstance()->getLobby())->getSafeSpawn());
         $player->getInventory()->clearAll();
@@ -433,7 +434,9 @@ class EventListener implements Listener
                 $player->getInventory()->clearAll();
                 self::sendItem($player);
                 $event->cancel();
+                return;
             }
+            $player->sendMessage("Chat y or n for save kits!");
         }
         if(isset($this->lastchat[$player->getName()])) {
             if($event->getMessage() == $this->lastchat[$player->getName()]){

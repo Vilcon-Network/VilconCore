@@ -19,8 +19,10 @@ class LevelManager{
             return TextFormat::GRAY . "[$level]";
         } elseif ($level < 40) {
             return TextFormat::BLUE . "[$level]";
-        } elseif ($level < 80) {
+        } elseif ($level < 60) {
             return TextFormat::GREEN . "[$level]";
+        } elseif ($level < 80) {
+            return TextFormat::LIGHT_PURPLE . "[$level]";
         } elseif ($level < 100) {
             return TextFormat::YELLOW . "[$level]";
         } else {

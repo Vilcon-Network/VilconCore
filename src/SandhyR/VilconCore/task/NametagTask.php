@@ -26,7 +26,7 @@ class NametagTask extends Task{
                 if (!isset($this->listener->damager[$player->getName()])) {
                     $player->setNameTag($player->getName() . "\n" . TextFormat::GRAY . $this->listener->device[$player->getName()] . " - " . $this->listener->control[$player->getName()]);
                 } else {
-                    $player->setNameTag($player->getName() . " " . "[" . TextFormat::AQUA . (int)$player->getHealth() .  TextFormat::WHITE. "]" . "\n" . TextFormat::AQUA . "CPS: " . TextFormat::RESET . $this->listener->getCps($player) . " " . TextFormat::AQUA . "PING: " . TextFormat::RESET . $player->getNetworkSession()->getPing() . "ms");
+                    $player->setNameTag($player->getName() . " " . "[" . TextFormat::AQUA . round($player->getHealth(), 2) .  TextFormat::WHITE. "]" . "\n" . TextFormat::AQUA . "CPS: " . TextFormat::RESET . $this->listener->getCps($player) . " " . TextFormat::AQUA . "PING: " . TextFormat::RESET . $player->getNetworkSession()->getPing() . "ms");
                 }
             } else {
                 if (!isset($this->listener->damager[$player->getName()])) {
