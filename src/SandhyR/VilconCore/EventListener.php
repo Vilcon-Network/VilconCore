@@ -6,6 +6,7 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityEffectRemoveEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -117,7 +118,7 @@ class EventListener implements Listener
                 }
                 if ($event->getBaseDamage() >= $player->getHealth() - 1.0) {
                     if(!Arena::isMatch($player) and !Arena::isMatch($killer)){
-                        $this->teleportLobby($player);
+                        self::teleportLobby($player);
                         $worldname = $killer->getWorld()->getFolderName();
                         $finalhealth = $killer->getHealth();
                         $weapon = $killer->getInventory()->getItemInHand()->getName();
@@ -167,11 +168,11 @@ class EventListener implements Listener
                             if (Arena::isRankDuel($player) and Arena::isRankDuel($killer)) {
                                 $this->addEloToProperty($killer, mt_rand(10, 25));
                             }
-                            $this->teleportLobby($player);
+                            self::teleportLobby($player);
                             $killer->sendTitle("VICTORY");
                             $killer->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
                             $player->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
-                            $this->teleportLobby($killer);
+                            self::teleportLobby($killer);
                             Arena::unsetMatch($player);
                         }
                     }
@@ -378,7 +379,7 @@ class EventListener implements Listener
                     $messages = ["quickied", "railed", "ezed", "clapped", "given an L", "smashed", "botted", "utterly defeated", "swept off their feet", "sent to the heavens", "killed", "owned"];
                     $killer = $this->damager[$player->getName()];
                     Server::getInstance()->broadcastMessage($player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer . " §6[" . "20" . " HP]");
-                    $this->teleportLobby($player);
+                    self::teleportLobby($player);
                     if(Server::getInstance()->getPlayerExact($killer)->isOnline()) {
                         $killer = Server::getInstance()->getPlayerExact($this->damager[$player->getName()]);
                         ++DatabaseControler::$kill[$killer->getName()];
@@ -391,13 +392,13 @@ class EventListener implements Listener
                     LevelManager::addExp($killer, mt_rand(20, 50));
                 } else {
                     Server::getInstance()->broadcastMessage($player->getName() . " fell into void");
-                    $this->teleportLobby($player);
+                    self::teleportLobby($player);
                 }
             }
         }
     }
 
-    public function teleportLobby(Player $player){
+    public static function teleportLobby(Player $player){
         PlayerManager::$playerstatus[$player->getName()] = PlayerManager::LOBBY;
         $player->setHealth(20);
         $player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(Main::getInstance()->getLobby())->getSafeSpawn());
@@ -502,7 +503,7 @@ class EventListener implements Listener
 
     public function onRespawn(PlayerRespawnEvent $event){
         $player = $event->getPlayer();
-        $this->teleportLobby($player);
+        self::teleportLobby($player);
     }
     
     public function onBreak(BlockBreakEvent $event){
@@ -522,7 +523,7 @@ class EventListener implements Listener
     public function onLogin(PlayerLoginEvent $event){
         $player = $event->getPlayer();
         $player->getInventory()->clearAll();
-        $this->teleportLobby($player);
+        self::teleportLobby($player);
         DatabaseControler::registerPlayer($player);
     }
 }

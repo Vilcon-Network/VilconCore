@@ -46,7 +46,7 @@ class ArenaResetter{
             $level = Server::getInstance()->getWorldManager()->getWorldByName($name);
             if(count($level->getPlayers()) > 0) {
                 foreach($level->getPlayers() as $player) {
-                    $player->teleport(Main::getInstance()->getLobby());
+                    EventListener::teleportLobby($player);
                 }
             }
 
