@@ -33,7 +33,11 @@ class ScoreboardTask  extends Task{
             $api->setLine($player, 3 ," ");
             $api->setLine($player, 4 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
             $api->setLine($player, 5 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
-            $api->setLine($player, 6 ,TextFormat::WHITE."KDR: ".TextFormat::AQUA. round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+            if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
+                $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+            } else {
+                $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+            }
             $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
             break;
                 case PlayerManager::NODEBUFF_FFA:
@@ -43,7 +47,11 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 3 ," ");
                     $api->setLine($player, 4 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
                     $api->setLine($player, 5 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
-                    $api->setLine($player, 6 ,TextFormat::WHITE."KDR: ".TextFormat::AQUA. round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
+                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    } else {
+                        $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    }
                     $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
                     break;
                 case PlayerManager::FIST_FFA:
@@ -53,7 +61,11 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 3 ," ");
                     $api->setLine($player, 4 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
                     $api->setLine($player, 5 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
-                    $api->setLine($player, 6 ,TextFormat::WHITE."KDR: ".TextFormat::AQUA. round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
+                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    } else {
+                        $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
+                    }
                     $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
                     break;
                 case PlayerManager::SUMO_FFA:
@@ -63,7 +75,11 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 3 ," ");
                     $api->setLine($player, 4 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
                     $api->setLine($player, 5 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
-                    $api->setLine($player, 6 ,TextFormat::WHITE."KDR: ".TextFormat::AQUA. round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
+                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    } else {
+                        $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
+                    }
                     $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
                     break;
                 case PlayerManager::RESISTANCE_FFA:
@@ -73,7 +89,11 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 3 ," ");
                     $api->setLine($player, 4 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
                     $api->setLine($player, 5 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
-                    $api->setLine($player, 6 ,TextFormat::WHITE."KDR: ".TextFormat::AQUA. round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
+                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    } else {
+                        $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
+                    }
                     $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
                     break;
                 case PlayerManager::COMBO_FFA:
@@ -83,7 +103,11 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 3 ," ");
                     $api->setLine($player, 4 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
                     $api->setLine($player, 5 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
-                    $api->setLine($player, 6 ,TextFormat::WHITE."KDR: ".TextFormat::AQUA. round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
+                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                    } else {
+                        $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
+                    }
                     $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
                     break;
             }
