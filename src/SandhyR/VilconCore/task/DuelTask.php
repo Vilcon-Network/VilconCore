@@ -26,22 +26,26 @@ class DuelTask extends Task{
     {
         $player1 = $this->player1;
         $player2 = $this->player2;
-        if($this->status){
-            $player1->sendTitle($this->timer);
-            $player2->sendTitle($this->timer);
-            $player1->setImmobile(true);
-            $player2->setImmobile(true);
-            --$this->timer;
-            if($this->timer <= 0){
-                $player1->setImmobile(false);
-                $player2->setImmobile(false);
-                $player1->sendTitle("FIGHT!");
-                $player2->sendTitle("FIGHT!");
-                $this->status = false;
+        if($player1->isOnline() and $player2->isOnline()) {
+            if ($this->status) {
+                $player1->sendTitle($this->timer);
+                $player2->sendTitle($this->timer);
+                $player1->setImmobile(true);
+                $player2->setImmobile(true);
+                --$this->timer;
+                if ($this->timer <= 0) {
+                    $player1->setImmobile(false);
+                    $player2->setImmobile(false);
+                    $player1->sendTitle("FIGHT!");
+                    $player2->sendTitle("FIGHT!");
+                    $this->status = false;
+                }
+            } else {
+                ++Arena::$duelTimer[$player1->getName()];
+                ++Arena::$duelTimer[$player2->getName()];
             }
         } else {
-            ++Arena::$duelTimer[$player1->getName()];
-            ++Arena::$duelTimer[$player2->getName()];
+            $this->getHandler()->cancel();
         }
     }
 }
