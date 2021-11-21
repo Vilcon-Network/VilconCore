@@ -4,6 +4,7 @@ namespace SandhyR\VilconCore\task;
 
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use pocketmine\utils\TextFormat;
 use SandhyR\VilconCore\arena\Arena;
 
 class DuelTask extends Task{
@@ -28,16 +29,16 @@ class DuelTask extends Task{
         $player2 = $this->player2;
         if($player1->isOnline() and $player2->isOnline()) {
             if ($this->status) {
-                $player1->sendTitle($this->timer);
-                $player2->sendTitle($this->timer);
+                $player1->sendTitle(TextFormat::RED.$this->timer);
+                $player2->sendTitle(TextFormat::RED.$this->timer);
                 $player1->setImmobile(true);
                 $player2->setImmobile(true);
                 --$this->timer;
                 if ($this->timer <= 0) {
                     $player1->setImmobile(false);
                     $player2->setImmobile(false);
-                    $player1->sendTitle("FIGHT!");
-                    $player2->sendTitle("FIGHT!");
+                    $player1->sendTitle(TextFormat::GREEN ."FIGHT!");
+                    $player2->sendTitle(TextFormat::GREEN."FIGHT!");
                     $this->status = false;
                 }
             } else {

@@ -52,7 +52,7 @@ class DatabaseControler extends Database{
         $kills = parent::getDatabase()->query("SELECT kills FROM playerstats WHERE username='$playername'")->fetch_row();
         return $kills[0];
     }
-
+    /* @deprecated */
     // NOT USED
     public static function addKills(Player $player){
         $playername = $player->getName();
@@ -66,6 +66,8 @@ class DatabaseControler extends Database{
         return $death[0];
     }
 
+
+    /* @deprecated */
     // NOT USED
     public static function addDeath(Player $player){
         $playername = $player->getName();
