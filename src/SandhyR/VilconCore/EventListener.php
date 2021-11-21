@@ -157,7 +157,7 @@ class EventListener implements Listener
                             $this->addEloToProperty($killer, mt_rand(10, 25));
                         }
                         self::teleportLobby($player);
-                        $killer->sendTitle("VICTORY");
+                        $killer->sendTitle(TextFormat::YELLOW ."VICTORY");
                         $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET .$killer->getName() . "\n" . TextFormat::RED ."Loser: " . TextFormat::RESET . $player->getName());
                         $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET .$killer->getName() . "\n" . TextFormat::RED ."Loser: " . TextFormat::RESET . $player->getName());
                         self::teleportLobby($killer);
@@ -301,7 +301,7 @@ class EventListener implements Listener
                     if($indeks == $player->getName()){
                         $enemy = Server::getInstance()->getPlayerExact($match);
                         if($enemy->isOnline()){
-                            $enemy->sendTitle("VICTORY!");
+                            $enemy->sendTitle(TextFormat::YELLOW. "VICTORY!");
                         }
                     }
                 }
