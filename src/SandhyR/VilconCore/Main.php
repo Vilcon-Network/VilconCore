@@ -40,7 +40,7 @@ class Main extends PluginBase{
         try {
             $this->getServer()->getWorldManager()->loadWorld($this->getLobby());
             $this->getServer()->getWorldManager()->loadWorld("nodebuff");
-            $this->getServer()->getWorldManager()->loadWorld("combo");
+//            $this->getServer()->getWorldManager()->loadWorld("combo");
             $this->getServer()->getWorldManager()->loadWorld("fist");
             $this->getServer()->getWorldManager()->loadWorld("sumo");
             $this->getServer()->getWorldManager()->loadWorld("gapple");

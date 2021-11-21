@@ -158,8 +158,8 @@ class EventListener implements Listener
                         }
                         self::teleportLobby($player);
                         $killer->sendTitle("VICTORY");
-                        $killer->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
-                        $player->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
+                        $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET .$killer->getName() . "\n" . TextFormat::RED ."Loser: " . TextFormat::RESET . $player->getName());
+                        $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET .$killer->getName() . "\n" . TextFormat::RED ."Loser: " . TextFormat::RESET . $player->getName());
                         self::teleportLobby($killer);
                         Arena::unsetMatch($player);
                         Arena::unsetMatch($killer);

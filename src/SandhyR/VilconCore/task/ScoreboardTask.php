@@ -6,6 +6,7 @@ use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\database\DatabaseControler;
 use SandhyR\VilconCore\Main;
 use SandhyR\VilconCore\PlayerManager;
@@ -96,6 +97,50 @@ class ScoreboardTask  extends Task{
                     }
                     $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
                     break;
+                case PlayerManager::NODEBUFF_DUEL:
+                    foreach (Arena::$match as $index => $matchs) {
+                        foreach ($matchs as $indeks => $match) {
+                            if ($indeks == $player->getName()) {
+                                $enemy = Server::getInstance()->getPlayerExact($match);
+                                if ($enemy->isOnline()) {
+                                    $api->new($player, "NodebuffDuel", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                                    $api->setLine($player, 1, TextFormat::WHITE . "Duel: " . TextFormat::AQUA . "Nodebuff");
+                                    $api->setLine($player, 2, TextFormat::WHITE . "Your Ping: " . TextFormat::AQUA . $player->getNetworkSession()->getPing());
+                                    $api->setLine($player, 3, TextFormat::WHITE . "Their Ping: " . TextFormat::AQUA . $enemy->getNetworkSession()->getPing());
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case PlayerManager::FIST_DUEL:
+                    foreach (Arena::$match as $index => $matchs) {
+                        foreach ($matchs as $indeks => $match) {
+                            if ($indeks == $player->getName()) {
+                                $enemy = Server::getInstance()->getPlayerExact($match);
+                                if ($enemy->isOnline()) {
+                                    $api->new($player, "FistDuel", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                                    $api->setLine($player, 1, TextFormat::WHITE . "Duel: " . TextFormat::AQUA . "Fist");
+                                    $api->setLine($player, 2, TextFormat::WHITE . "Your Ping: " . TextFormat::AQUA . $player->getNetworkSession()->getPing());
+                                    $api->setLine($player, 3, TextFormat::WHITE . "Their Ping: " . TextFormat::AQUA . $enemy->getNetworkSession()->getPing());
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case PlayerManager::SUMO_DUEL:
+                    foreach (Arena::$match as $index => $matchs) {
+                        foreach ($matchs as $indeks => $match) {
+                            if ($indeks == $player->getName()) {
+                                $enemy = Server::getInstance()->getPlayerExact($match);
+                                if ($enemy->isOnline()) {
+                                    $api->new($player, "SumoDuel", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                                    $api->setLine($player, 1, TextFormat::WHITE . "Duel: " . TextFormat::AQUA . "Sumo");
+                                    $api->setLine($player, 2, TextFormat::WHITE . "Your Ping: " . TextFormat::AQUA . $player->getNetworkSession()->getPing());
+                                    $api->setLine($player, 3, TextFormat::WHITE . "Their Ping: " . TextFormat::AQUA . $enemy->getNetworkSession()->getPing());
+                                }
+                            }
+                        }
+                    }
             }
         } else {
             $this->getHandler()->cancel();
