@@ -1340,7 +1340,7 @@ class Arena
                     if ($indeks == $player->getName()) {
                         unset(self::$match[$index][$indek][$indeks]);
                     }
-                    if ($match == $player->getName()) {
+                    if ($matches == $player->getName()) {
                         unset(self::$match[$index][$indek][$indeks]);
                     }
                 }
@@ -1435,14 +1435,14 @@ class Arena
         return false;
     }
 
-    public static function isCombo(Player $player): bool{
-        foreach (self::$match as $matchs){
-            foreach ($matchs["combo"] as $index => $match){
-                if($index == $player->getName() or $match == $player->getName()){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+//    public static function isCombo(Player $player): bool{
+//         foreach (self::$match as $matchs){
+//             foreach ($matchs["combo"] as $index => $match){
+//                 if($index == $player->getName() or $match == $player->getName()){
+//                     return true;
+//                 }
+//             }
+//         }
+//        return true;
+//    }
 }

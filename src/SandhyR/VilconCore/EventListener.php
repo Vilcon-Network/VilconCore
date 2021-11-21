@@ -117,7 +117,7 @@ class EventListener implements Listener
                     }
                 }
                 if ($event->getBaseDamage() >= $player->getHealth() - 1.0) {
-                    if(!Arena::isMatch($player) and !Arena::isMatch($killer)){
+                    if (!Arena::isMatch($player) and !Arena::isMatch($killer)) {
                         self::teleportLobby($player);
                         $worldname = $killer->getWorld()->getFolderName();
                         $finalhealth = $killer->getHealth();
@@ -138,43 +138,32 @@ class EventListener implements Listener
                         } else {
                             $dm = $player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $finalhealth . " HP]";
                         }
-                        switch ($worldname) {
-                            case "nodebuff":
-                                $manager->sendKit($killer, PlayerManager::NODEBUFF_FFA);
-                                break;
-                            case "fist":
-//                                $event->setKnockBack();
-                                $manager->sendKit($killer, PlayerManager::FIST_FFA);
-                                break;
-                            case "combo":
-                                $manager->sendKit($killer, PlayerManager::COMBO_FFA);
-                                break;
-                            case "sumo":
-
+                        $manager->sendKit($player, PlayerManager::$playerstatus[$player->getName()]);
+                    }
+                    if (self::$autoez[$killer->getName()] == 1) {
+                        $killer->chat("ez");
+                    }
+                    if (self::$autogg[$killer->getName()] == 1) {
+                        $killer->chat("gg");
+                    }
+                    Server::getInstance()->broadcastMessage($dm);
+                    ++DatabaseControler::$kill[$killer->getName()];
+                    ++DatabaseControler::$death[$player->getName()];
+                    LevelManager::addExp($killer, mt_rand(20, 50));
+                    Utils::addSound($killer);
+                } else {
+                    if ($event->getBaseDamage() >= $player->getHealth() - 1.0) {
+                        if (Arena::isRankDuel($player) and Arena::isRankDuel($killer)) {
+                            $this->addEloToProperty($killer, mt_rand(10, 25));
                         }
-                        if(self::$autoez[$killer->getName()] == 1){
-                            $killer->chat("ez");
-                        }
-                        if(self::$autogg[$killer->getName()] == 1){
-                            $killer->chat("gg");
-                        }
-                        Server::getInstance()->broadcastMessage($dm);
-                        ++DatabaseControler::$kill[$killer->getName()];
-                        ++DatabaseControler::$death[$player->getName()];
-                        LevelManager::addExp($killer, mt_rand(20, 50));
-                        Utils::addSound($killer);
-                    } else {
-                        if ($event->getBaseDamage() >= $player->getHealth() - 1.0) {
-                            if (Arena::isRankDuel($player) and Arena::isRankDuel($killer)) {
-                                $this->addEloToProperty($killer, mt_rand(10, 25));
-                            }
-                            self::teleportLobby($player);
-                            $killer->sendTitle("VICTORY");
-                            $killer->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
-                            $player->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
-                            self::teleportLobby($killer);
-                            Arena::unsetMatch($player);
-                        }
+                        self::teleportLobby($player);
+                        $killer->sendTitle("VICTORY");
+                        $killer->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
+                        $player->sendMessage("Winner: " . $killer->getName() . "\n" . "Loser: " . $player->getName());
+                        self::teleportLobby($killer);
+                        Arena::unsetMatch($player);
+                        Arena::unsetMatch($killer);
+                        var_dump(Arena::$match);
                     }
                 }
             }
@@ -182,6 +171,8 @@ class EventListener implements Listener
             $player->sendMessage("Base Damage:" . $event->getBaseDamage());
             $killer->sendMessage("Your healt:" . $killer->getHealth());
             $killer->sendMessage("Base Damage:" . $event->getBaseDamage());
+            $player->setHealth($player->getHealth());
+            $killer->setHealth($killer->getHealth());
         }
     }
     public static function sendItem(Player $player)
@@ -362,13 +353,13 @@ class EventListener implements Listener
          if ($event->getCause() == EntityDamageEvent::CAUSE_FALL) {
             $event->cancel();
         }
-         if($event->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK){
-             if($entity instanceof Player) {
-                 if ($event->getEntity()->getWorld()->getFolderName() == "combo" or Arena::isCombo($entity)) {
-                     $event->uncancel();
-                 }
-             }
-    }
+//         if($event->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK){
+//             if($entity instanceof Player) {
+//                 if ($event->getEntity()->getWorld()->getFolderName() == "combo" or Arena::isCombo($entity)) {
+//                     $event->uncancel();
+//                 }
+//             }
+//    }
     }
 
     public function onMove(PlayerMoveEvent $event){

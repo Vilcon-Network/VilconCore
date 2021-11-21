@@ -54,7 +54,6 @@ class Main extends PluginBase{
         Arena::$unrankqueue["fist"] = [];
         Arena::$unrankqueue["boxing"] = [];
         Arena::$unrankqueue["voidfight"] = [];
-        Arena::$unrankqueue["combo"] = [];
         Arena::$unrankqueue["gapple"] = [];
         Arena::$unrankqueue["sumo"] = [];
         Arena::$unrankqueue["resistance"] = [];
@@ -62,7 +61,6 @@ class Main extends PluginBase{
         Arena::$rankqueue["fist"] = [];
         Arena::$rankqueue["boxing"] = [];
         Arena::$rankqueue["voidfight"] = [];
-        Arena::$rankqueue["combo"] = [];
         Arena::$rankqueue["gapple"] = [];
         Arena::$rankqueue["sumo"] = [];
         Arena::$rankqueue["resistance"] = [];

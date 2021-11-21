@@ -57,7 +57,7 @@ class FormManager{
         $form->addButton("Nodebuff" . "\n" . "Playing: " . count(Server::getInstance()->getWorldManager()->getWorldByName("nodebuff")->getPlayers()) ?? 0, 0, "textures/items/potion_bottle_splash_heal");
         $form->addButton("Resistance" . "\n" . "Playing: " . count(Server::getInstance()->getWorldManager()->getWorldByName("resistance")->getPlayers()) ?? 0, 0, "textures/ui/resistance_effect");
         $form->addButton("Fist" . "\n" . "Playing: " . count(Server::getInstance()->getWorldManager()->getWorldByName("fist")->getPlayers()) ?? 0, 0, "textures/items/beef_cooked");
-        $form->addButton("Combo" . "\n" . "Playing: " . count(Server::getInstance()->getWorldManager()->getWorldByName("combo")->getPlayers()) ?? 0, 0, "textures/items/fish_pufferfish_raw");
+//        $form->addButton("Combo" . "\n" . "Playing: " . count(Server::getInstance()->getWorldManager()->getWorldByName("combo")->getPlayers()) ?? 0, 0, "textures/items/fish_pufferfish_raw");
         $form->addButton("Sumo" . "\n" . "Playing: " . count(Server::getInstance()->getWorldManager()->getWorldByName("sumo")->getPlayers()) ?? 0, 0,"textures/items/feather");
         $form->addButton("Gapple" . "\n" . "Playing:" . count(Server::getInstance()->getWorldManager()->getWorldByName("gapple")->getPlayers()) ??  0, 0, "textures/items/apple_golden");
         $form->sendToPlayer($player);
@@ -132,7 +132,7 @@ class FormManager{
         $form->addButton("Nodebuff" . "\n" . "Queue: " . count(Arena::$rankqueue["nodebuff"]) ?? 0, 0, "textures/items/potion_bottle_splash_heal");
         $form->addButton("Resistance" . "\n" . "Queue: " . count(Arena::$rankqueue["resistance"]) ?? 0, 0, "textures/ui/resistance_effect");
         $form->addButton("Fist" . "\n" . "Queue: " . count(Arena::$rankqueue["fist"]) ?? 0, 0, "textures/items/beef_cooked");
-        $form->addButton("Combo" . "\n" . "Queue: " . count(Arena::$rankqueue["gapple"]) ?? 0, 0, "textures/items/fish_pufferfish_raw");
+//        $form->addButton("Combo" . "\n" . "Queue: " . count(Arena::$rankqueue["gapple"]) ?? 0, 0, "textures/items/fish_pufferfish_raw");
         $form->addButton("Sumo" . "\n" . "Queue: " . count(Arena::$rankqueue["sumo"]) ?? 0, 0,"textures/items/feather");
         $form->addButton("Gapple" . "\n" . "Queue:" . count(Arena::$rankqueue["gapple"]) ??  0, 0, "textures/items/apple_golden");
         $form->addButton("Voidfight" . "\n" . "Queue:" . count(Arena::$rankqueue["voidfight"]) ??  0, 0, "textures/items/bed_red");
@@ -178,7 +178,7 @@ class FormManager{
         $form->addButton("Nodebuff" . "\n" . "Queue: " . count(Arena::$unrankqueue["nodebuff"]) ?? 0, 0, "textures/items/potion_bottle_splash_heal");
         $form->addButton("Resistance" . "\n" . "Queue: " . count(Arena::$unrankqueue["resistance"]) ?? 0, 0, "textures/ui/resistance_effect");
         $form->addButton("Fist" . "\n" . "Queue: " . count(Arena::$unrankqueue["fist"]) ?? 0, 0, "textures/items/beef_cooked");
-        $form->addButton("Combo" . "\n" . "Queue: " . count(Arena::$unrankqueue["gapple"]) ?? 0, 0, "textures/items/fish_pufferfish_raw");
+//        $form->addButton("Combo" . "\n" . "Queue: " . count(Arena::$unrankqueue["gapple"]) ?? 0, 0, "textures/items/fish_pufferfish_raw");
         $form->addButton("Sumo" . "\n" . "Queue: " . count(Arena::$unrankqueue["sumo"]) ?? 0, 0,"textures/items/feather");
         $form->addButton("Gapple" . "\n" . "Queue:" . count(Arena::$unrankqueue["gapple"]) ??  0, 0, "textures/items/apple_golden");
         $form->addButton("Voidfight" . "\n" . "Queue:" . count(Arena::$unrankqueue["voidfight"]) ??  0, 0, "textures/items/bed_red");
