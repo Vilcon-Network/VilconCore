@@ -72,7 +72,7 @@ class EventListener implements Listener
         $player->getInventory()->clearAll();
         self::sendItem($player);
         $this->clicks[$event->getPlayer()->getName()] = [];
-        $this->initJoin($player);
+//        $this->initJoin($player);
         if (count(Server::getInstance()->getOnlinePlayers()) - 1 == 0) {
             Main::getInstance()->antiCheatTask($this);
         }
@@ -516,5 +516,6 @@ class EventListener implements Listener
         $player->getInventory()->clearAll();
         self::teleportLobby($player);
         DatabaseControler::registerPlayer($player);
+        $this->initJoin($player)
     }
 }
