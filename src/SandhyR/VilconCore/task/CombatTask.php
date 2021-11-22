@@ -4,6 +4,7 @@ namespace SandhyR\VilconCore\task;
 
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use pocketmine\utils\TextFormat;
 use SandhyR\VilconCore\EventListener;
 use SandhyR\VilconCore\Main;
 
@@ -33,8 +34,8 @@ class CombatTask extends Task{
                     $listener->unsetTimer($this->player2);
                     $listener->unsetDamager($this->player2);
                     $listener->unsetDamager($this->player1);
-                    $this->player1->sendMessage("You are not in combat now");
-                    $this->player2->sendMessage("You are not in combat now");
+                    $this->player1->sendMessage(TextFormat::GREEN."You are not in combat now");
+                    $this->player2->sendMessage(TextFormat::GREEN."You are not in combat now");
                     $this->getHandler()->cancel();
                 }
                 if ($worldname !== null) {
@@ -43,6 +44,8 @@ class CombatTask extends Task{
                         $listener->unsetTimer($this->player2);
                         $listener->unsetDamager($this->player2);
                         $listener->unsetDamager($this->player1);
+                        $this->player1->sendMessage(TextFormat::GREEN."You are not in combat now");
+                        $this->player2->sendMessage(TextFormat::GREEN."You are not in combat now");
                         $this->getHandler()->cancel();
                     }
                 }
@@ -51,8 +54,8 @@ class CombatTask extends Task{
                 unset($listener->damager[$this->player2->getName()]);
                 unset($listener->timer[$this->player1->getName()]);
                 unset($listener->timer[$this->player2->getName()]);
-                $this->player1->sendMessage("You are not in combat now");
-                $this->player2->sendMessage("You are not in combat now");
+                $this->player1->sendMessage(TextFormat::GREEN."You are not in combat now");
+                $this->player2->sendMessage(TextFormat::GREEN."You are not in combat now");
                 $this->getHandler()->cancel();
             }
         } else {
@@ -60,8 +63,8 @@ class CombatTask extends Task{
             unset($listener->damager[$this->player2->getName()]);
             unset($listener->timer[$this->player1->getName()]);
             unset($listener->timer[$this->player2->getName()]);
-            $this->player1->sendMessage("You are not in combat now");
-            $this->player2->sendMessage("You are not in combat now");
+            $this->player1->sendMessage(TextFormat::GREEN."You are not in combat now");
+            $this->player2->sendMessage(TextFormat::GREEN."You are not in combat now");
             $this->getHandler()->cancel();
         }
     }

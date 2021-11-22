@@ -2,12 +2,14 @@
 
 namespace SandhyR\VilconCore;
 
+use pocketmine\entity\Skin;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityEffectRemoveEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
+use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
@@ -73,6 +75,7 @@ class EventListener implements Listener
         self::sendItem($player);
         $this->clicks[$event->getPlayer()->getName()] = [];
 //        $this->initJoin($player);
+        $player->setAllowFlight(true);
         if (count(Server::getInstance()->getOnlinePlayers()) - 1 == 0) {
             Main::getInstance()->antiCheatTask($this);
         }
@@ -104,14 +107,14 @@ class EventListener implements Listener
                     Main::getInstance()->antiInterruptTask($player, $killer, $this);
                 } elseif (isset($this->damager[$player->getName()]) and !isset($this->damager[$killer->getName()])) {
                     $event->cancel();
-                    $killer->sendMessage("Interrupting is not allowed");
+                    $killer->sendMessage(TextFormat::RED . "Interrupting is not allowed!");
                 } elseif (!isset($this->damager[$player->getName()]) and isset($this->damager[$killer->getName()])) {
                     $event->cancel();
-                    $killer->sendMessage("Your enemy is " . $this->damager[$killer->getName()]);
+                    $killer->sendMessage(TextFormat::RED . "Your enemy is " . $this->damager[$killer->getName()]);
                 } elseif (isset($this->damager[$player->getName()])) {
                     if ($killer->getName() !== $this->damager[$player->getName()]) {
                         $event->cancel();
-                        $killer->sendMessage("Interrupting is not allowed!");
+                        $killer->sendMessage(TextFormat::RED ."Interrupting is not allowed!");
                     } else {
                         $this->setTimer($player, $killer);
                     }
@@ -554,5 +557,21 @@ class EventListener implements Listener
         self::teleportLobby($player);
         DatabaseControler::registerPlayer($player);
         $this->initJoin($player);
+    }
+
+    public function onChangeWorld(EntityTeleportEvent $event){
+        $entity = $event->getEntity();
+        if($event->getTo()->getWorld()->getFolderName() == Main::getInstance()->getLobby()){
+            if($entity instanceof Player){
+                PlayerManager::$playerstatus[$entity->getName()] = PlayerManager::LOBBY;
+                if(strtoupper($this->plugin->rank[$entity->getName()]) !== "DEFAULT"){
+                    $entity->setAllowFlight(true);
+                }
+            }
+        } else {
+            if($entity instanceof Player){
+                $entity->setAllowFlight(false);
+            }
+        }
     }
 }
