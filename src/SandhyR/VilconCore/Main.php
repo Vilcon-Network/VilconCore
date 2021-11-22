@@ -30,7 +30,7 @@ class Main extends PluginBase{
     public function onEnable(): void
     {
         @mkdir($this->getDataFolder());
-        var_dump($this->getDataFolder());
+        $this->checkRequirement();
         @mkdir(Server::getInstance()->getDataPath() . "worldsbackup");
         $this->saveDefaultConfig();
         $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML, array());
@@ -104,6 +104,16 @@ class Main extends PluginBase{
         try {
             ArenaResetter::removeWorld("voidfight");
         } catch (\UnexpectedValueException $exception){
+        }
+    }
+
+    public function checkRequirement()
+    {
+        if (!file_exists(Main::getInstance()->getDataFolder() . "steve.png") || !file_exists(Main::getInstance()->getDataFolder() . "steve.json") || !file_exists(Main::getInstance()->getDataFolder() . "config.yml")) {
+            if (file_exists(str_replace("config.yml", "", Main::getInstance()->getResources()["config.yml"]))) {
+                $var = new SkinManager();
+                $var->recurse_copy(str_replace("config.yml", "", Main::getInstance()->getResources()["config.yml"]), Main::getInstance()->getDataFolder());
+            }
         }
     }
 }

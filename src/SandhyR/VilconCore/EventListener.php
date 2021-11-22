@@ -555,14 +555,4 @@ class EventListener implements Listener
         DatabaseControler::registerPlayer($player);
         $this->initJoin($player);
     }
-
-    public function checkRequirement()
-    {
-        if (!file_exists(Main::getInstance()->getDataFolder() . "steve.png") || !file_exists(Main::getInstance()->getDataFolder() . "steve.json") || !file_exists(Main::getInstance()->getDataFolder() . "config.yml")) {
-            if (file_exists(str_replace("config.yml", "", Main::getInstance()->getResources()["config.yml"]))) {
-                $var = new SkinManager();
-                $var->recurse_copy(str_replace("config.yml", "", Main::getInstance()->getResources()["config.yml"]), Main::getInstance()->getDataFolder());
-            }
-        }
-    }
 }
