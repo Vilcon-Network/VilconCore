@@ -114,7 +114,7 @@ class EventListener implements Listener
                 } elseif (isset($this->damager[$player->getName()])) {
                     if ($killer->getName() !== $this->damager[$player->getName()]) {
                         $event->cancel();
-                        $killer->sendMessage(TextFormat::RED ."Interrupting is not allowed!");
+                        $killer->sendMessage(TextFormat::RED . "Interrupting is not allowed!");
                     } else {
                         $this->setTimer($player, $killer);
                     }
@@ -142,6 +142,15 @@ class EventListener implements Listener
                             $dm = $player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $finalhealth . " HP]";
                         }
                         $manager->sendKit($player, PlayerManager::$playerstatus[$player->getName()]);
+                    } else {
+                            self::teleportLobby($player);
+                            $killer->sendTitle(TextFormat::YELLOW . "VICTORY");
+                            $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
+                            $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
+                            self::teleportLobby($killer);
+                            Arena::unsetMatch($player);
+                            Arena::unsetMatch($killer);
+                            var_dump(Arena::$match);
                     }
                     if (self::$autoez[$killer->getName()] == 1) {
                         $killer->chat("ez");
@@ -154,20 +163,6 @@ class EventListener implements Listener
                     ++DatabaseControler::$death[$player->getName()];
                     LevelManager::addExp($killer, mt_rand(20, 50));
                     Utils::addSound($killer);
-                } else {
-                    if ($event->getBaseDamage() >= $player->getHealth() - 1.0) {
-                        if (Arena::isRankDuel($player) and Arena::isRankDuel($killer)) {
-                            $this->addEloToProperty($killer, mt_rand(10, 25));
-                        }
-                        self::teleportLobby($player);
-                        $killer->sendTitle(TextFormat::YELLOW . "VICTORY");
-                        $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
-                        $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
-                        self::teleportLobby($killer);
-                        Arena::unsetMatch($player);
-                        Arena::unsetMatch($killer);
-                        var_dump(Arena::$match);
-                    }
                 }
             }
             $player->sendMessage("Your healt:" . $player->getHealth());
