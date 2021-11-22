@@ -30,6 +30,7 @@ class Main extends PluginBase{
     public function onEnable(): void
     {
         @mkdir($this->getDataFolder());
+        var_dump($this->getDataFolder());
         @mkdir(Server::getInstance()->getDataPath() . "worldsbackup");
         $this->saveDefaultConfig();
         $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML, array());

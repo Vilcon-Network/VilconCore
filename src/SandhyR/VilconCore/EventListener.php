@@ -157,9 +157,9 @@ class EventListener implements Listener
                             $this->addEloToProperty($killer, mt_rand(10, 25));
                         }
                         self::teleportLobby($player);
-                        $killer->sendTitle(TextFormat::YELLOW ."VICTORY");
-                        $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET .$killer->getName() . "\n" . TextFormat::RED ."Loser: " . TextFormat::RESET . $player->getName());
-                        $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET .$killer->getName() . "\n" . TextFormat::RED ."Loser: " . TextFormat::RESET . $player->getName());
+                        $killer->sendTitle(TextFormat::YELLOW . "VICTORY");
+                        $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
+                        $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
                         self::teleportLobby($killer);
                         Arena::unsetMatch($player);
                         Arena::unsetMatch($killer);
@@ -175,6 +175,7 @@ class EventListener implements Listener
             $killer->setHealth($killer->getHealth());
         }
     }
+
     public static function sendItem(Player $player)
     {
         $player->getInventory()->clearAll();
@@ -192,7 +193,7 @@ class EventListener implements Listener
         switch ($id) {
             case ItemIds::DIAMOND_SWORD:
                 if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
-                    if(!isset($this->delay[$player->getName()])) {
+                    if (!isset($this->delay[$player->getName()])) {
                         $form = new FormManager();
                         $form->ffaForm($player);
                         $this->delay[$player->getName()] = time();
@@ -206,11 +207,11 @@ class EventListener implements Listener
                 break;
             case ItemIds::IRON_SWORD:
                 if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
-                    if(!isset($this->delay[$player->getName()])) {
+                    if (!isset($this->delay[$player->getName()])) {
                         $form = new FormManager();
                         $form->duelsForm($player);
                         $this->delay[$player->getName()] = time();
-                    }  else {
+                    } else {
                         if ($this->delay[$player->getName()] < time()) {
                             unset($this->delay[$player->getName()]);
                         }
@@ -219,7 +220,7 @@ class EventListener implements Listener
                 break;
             case ItemIds::GOLD_SWORD:
                 if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
-                    if(!isset($this->delay[$player->getName()])) {
+                    if (!isset($this->delay[$player->getName()])) {
                         $form = new FormManager();
                         $form->botForm($player);
                         $this->delay[$player->getName()] = time();
@@ -239,39 +240,46 @@ class EventListener implements Listener
         }
     }
 
-    public function unsetDamager(Player $player){
+    public function unsetDamager(Player $player)
+    {
         unset($this->damager[$player->getName()]);
     }
 
-    public function getTimer(Player $player){
+    public function getTimer(Player $player)
+    {
         return $this->timer[$player->getName()];
     }
 
-    public function timer(Player $player){
+    public function timer(Player $player)
+    {
         --$this->timer[$player->getName()];
     }
 
-    public function unsetTimer(Player $player){
+    public function unsetTimer(Player $player)
+    {
         unset($this->timer[$player->getName()]);
     }
 
-    public function setEnemy(Player $player, Player $enemy){
+    public function setEnemy(Player $player, Player $enemy)
+    {
         $this->damager[$player->getName()] = $enemy->getName();
         $this->damager[$enemy->getName()] = $player->getName();
     }
 
-    public function setTimer(Player $player, Player $enemy){
+    public function setTimer(Player $player, Player $enemy)
+    {
         $this->timer[$player->getName()] = 15;
         $this->timer[$enemy->getName()] = 15;
     }
 
-    public function onQuit(PlayerQuitEvent $event){
+    public function onQuit(PlayerQuitEvent $event)
+    {
         $player = $event->getPlayer();
         unset($this->clicks[$event->getPlayer()->getName()]);
         $event->getPlayer()->getInventory()->clearAll();
-        if(isset($this->damager[$event->getPlayer()->getName()])){
+        if (isset($this->damager[$event->getPlayer()->getName()])) {
             $damager = Server::getInstance()->getPlayerExact($this->damager[$event->getPlayer()->getName()]);
-            if($damager->isOnline()) {
+            if ($damager->isOnline()) {
                 ++DatabaseControler::$kill[$damager->getName()];
                 $messages = ["quickied", "railed", "ezed", "clapped", "given an L", "smashed", "botted", "utterly defeated", "swept off their feet", "sent to the heavens", "killed", "owned"];
                 Server::getInstance()->broadcastMessage($player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $damager->getName() . " §6[" . $damager->getHealth() . " HP]");
@@ -295,13 +303,13 @@ class EventListener implements Listener
         unset(LevelManager::$level[$player->getName()]);
         unset(PlayerManager::$playerstatus[$player->getName()]);
         unset($this->plugin->rank[$player->getName()]);
-        if(Arena::isMatch($player)){
-            foreach (Arena::$match as $index => $matchs){
-                foreach ($matchs as $indeks => $match){
-                    if($indeks == $player->getName()){
+        if (Arena::isMatch($player)) {
+            foreach (Arena::$match as $index => $matchs) {
+                foreach ($matchs as $indeks => $match) {
+                    if ($indeks == $player->getName()) {
                         $enemy = Server::getInstance()->getPlayerExact($match);
-                        if($enemy->isOnline()){
-                            $enemy->sendTitle(TextFormat::YELLOW. "VICTORY!");
+                        if ($enemy->isOnline()) {
+                            $enemy->sendTitle(TextFormat::YELLOW . "VICTORY!");
                         }
                     }
                 }
@@ -315,42 +323,46 @@ class EventListener implements Listener
         unset(PlayerManager::$playerstatus[$player->getName()]);
     }
 
-    public function addClick(Player $player){
+    public function addClick(Player $player)
+    {
         array_unshift($this->clicks[$player->getName()], microtime(true));
-        if(count($this->clicks[$player->getName()]) >= 100){
+        if (count($this->clicks[$player->getName()]) >= 100) {
             array_pop($this->clicks[$player->getName()]);
         }
-        if(self::$cpspopup[$player->getName()] == 1) {
+        if (self::$cpspopup[$player->getName()] == 1) {
             $player->sendTip(TextFormat::AQUA . "CPS: " . TextFormat::RESET . $this->getCps($player));
         }
     }
 
-    public function onPacketReceive(DataPacketReceiveEvent $event){
+    public function onPacketReceive(DataPacketReceiveEvent $event)
+    {
         $player = $event->getOrigin()->getPlayer();
         $packet = $event->getPacket();
-        if($packet instanceof InventoryTransactionPacket){
-            if($packet->trData->getTypeId() == InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY) {
+        if ($packet instanceof InventoryTransactionPacket) {
+            if ($packet->trData->getTypeId() == InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY) {
                 $this->addClick($event->getOrigin()->getPlayer());
             }
         }
-        if($packet instanceof LevelSoundEventPacket and $packet->sound == 42){
-                $this->addClick($player);
+        if ($packet instanceof LevelSoundEventPacket and $packet->sound == 42) {
+            $this->addClick($player);
         }
     }
 
-    public function getCps(Player $player, float $deltaTime=1.0, int $roundPrecision=1):float{
-        if(empty($this->clicks[$player->getName()])){
+    public function getCps(Player $player, float $deltaTime = 1.0, int $roundPrecision = 1): float
+    {
+        if (empty($this->clicks[$player->getName()])) {
             return 0.0;
         }
-        $mt=microtime(true);
-        return round(count(array_filter($this->clicks[$player->getName()], static function(float $t) use ($deltaTime, $mt):bool{
+        $mt = microtime(true);
+        return round(count(array_filter($this->clicks[$player->getName()], static function (float $t) use ($deltaTime, $mt): bool {
                 return ($mt - $t) <= $deltaTime;
             })) / $deltaTime, $roundPrecision);
     }
 
-    public function onDamage(EntityDamageEvent $event){
+    public function onDamage(EntityDamageEvent $event)
+    {
         $entity = $event->getEntity();
-         if ($event->getCause() == EntityDamageEvent::CAUSE_FALL) {
+        if ($event->getCause() == EntityDamageEvent::CAUSE_FALL) {
             $event->cancel();
         }
 //         if($event->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK){
@@ -362,16 +374,17 @@ class EventListener implements Listener
 //    }
     }
 
-    public function onMove(PlayerMoveEvent $event){
+    public function onMove(PlayerMoveEvent $event)
+    {
         $player = $event->getPlayer();
-        if($player->getPosition()->asVector3()->getY() <= 2){
-            if($player->getWorld()->getFolderName() == "sumo") {
+        if ($player->getPosition()->asVector3()->getY() <= 2) {
+            if ($player->getWorld()->getFolderName() == "sumo") {
                 if (isset($this->damager[$player->getName()])) {
                     $messages = ["quickied", "railed", "ezed", "clapped", "given an L", "smashed", "botted", "utterly defeated", "swept off their feet", "sent to the heavens", "killed", "owned"];
                     $killer = $this->damager[$player->getName()];
                     Server::getInstance()->broadcastMessage($player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer . " §6[" . "20" . " HP]");
                     self::teleportLobby($player);
-                    if(Server::getInstance()->getPlayerExact($killer)->isOnline()) {
+                    if (Server::getInstance()->getPlayerExact($killer)->isOnline()) {
                         $killer = Server::getInstance()->getPlayerExact($this->damager[$player->getName()]);
                         ++DatabaseControler::$kill[$killer->getName()];
                     } else {
@@ -389,7 +402,8 @@ class EventListener implements Listener
         }
     }
 
-    public static function teleportLobby(Player $player){
+    public static function teleportLobby(Player $player)
+    {
         PlayerManager::$playerstatus[$player->getName()] = PlayerManager::LOBBY;
         $player->setHealth(20);
         $player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(Main::getInstance()->getLobby())->getSafeSpawn());
@@ -397,7 +411,8 @@ class EventListener implements Listener
         self::sendItem($player);
     }
 
-    public function initJoin(Player $player){
+    public function initJoin(Player $player)
+    {
         $rank = DatabaseControler::getRanks($player);
         $this->plugin->rank[$player->getName()] = $rank;
         LevelManager::$level[$player->getName()] = DatabaseControler::getLevel($player);
@@ -406,23 +421,36 @@ class EventListener implements Listener
         $control = ["Unknown", "Mouse", "Touch", "Controller"];
         try {
             $this->control[$player->getName()] = $control[$extradata["CurrentInputMode"]];
-        } catch (\ErrorException $exception){
+        } catch (\ErrorException $exception) {
 
         }
         $this->device[$player->getName()] = $os[$extradata["DeviceOS"]];
+        $data = $player->getPlayerInfo()->getExtraData();
+        $name = $data["ThirdPartyName"];
+        if ($data["PersonaSkin"]) {
+            if (!file_exists(Main::getInstance()->getDataFolder() . "saveskin")) {
+                mkdir(Main::getInstance()->getDataFolder() . "saveskin", 0777);
+            }
+            copy(Main::getInstance()->getDataFolder() . "steve.png", Main::getInstance()->getDataFolder() . "saveskin/$name.png");
+            return;
+        }
+        if ($data["SkinImageHeight"] == 32) {
+        }
+        $saveSkin = new SkinManager();
+        $saveSkin->saveSkin(base64_decode($data["SkinData"], true), $name);
     }
 
     public function onChat(PlayerChatEvent $event)
     {
 
         $player = $event->getPlayer();
-        if(isset(KitManager::$setupkit[$player->getName()])){
-            if(strtolower($event->getMessage()) == "y"){
+        if (isset(KitManager::$setupkit[$player->getName()])) {
+            if (strtolower($event->getMessage()) == "y") {
                 KitManager::saveKit($player, KitManager::$setupkit[$player->getName()]);
                 $event->cancel();
                 return;
             }
-            if(strtolower($event->getMessage()) == "n"){
+            if (strtolower($event->getMessage()) == "n") {
                 $player->getInventory()->clearAll();
                 self::sendItem($player);
                 $event->cancel();
@@ -430,8 +458,8 @@ class EventListener implements Listener
             }
             $player->sendMessage("Chat y or n for save kits!");
         }
-        if(isset($this->lastchat[$player->getName()])) {
-            if($event->getMessage() == $this->lastchat[$player->getName()]){
+        if (isset($this->lastchat[$player->getName()])) {
+            if ($event->getMessage() == $this->lastchat[$player->getName()]) {
                 $event->cancel();
                 $player->sendMessage("Spam is not allowed");
             }
@@ -439,7 +467,7 @@ class EventListener implements Listener
         } else {
             $this->lastchat[$player->getName()] = $event->getMessage();
         }
-        if(strtoupper($this->plugin->rank[$player->getName()]) == "DEFAULT") {
+        if (strtoupper($this->plugin->rank[$player->getName()]) == "DEFAULT") {
             if (isset($this->chatdelay[$player->getName()])) {
                 if ($this->chatdelay[$player->getName()] + 3 < time()) {
                     $this->chatdelay[$player->getName()] = time();
@@ -473,49 +501,68 @@ class EventListener implements Listener
         }
     }
 
-    public function onExhaust(PlayerExhaustEvent $event){
+    public function onExhaust(PlayerExhaustEvent $event)
+    {
         $event->cancel();
     }
 
-    public function onRegen(EntityRegainHealthEvent $event){
+    public function onRegen(EntityRegainHealthEvent $event)
+    {
         $entity = $event->getEntity();
-        if($entity instanceof Player){
-            if($event->getRegainReason() == 4) {
+        if ($entity instanceof Player) {
+            if ($event->getRegainReason() == 4) {
                 $event->cancel();
             }
         }
     }
-    public function onDeath(PlayerDeathEvent $event){
+
+    public function onDeath(PlayerDeathEvent $event)
+    {
         $player = $event->getPlayer();
         $event->setXpDropAmount(0);
         $event->setDrops([]);
         $event->setDeathMessage("");
     }
 
-    public function onRespawn(PlayerRespawnEvent $event){
+    public function onRespawn(PlayerRespawnEvent $event)
+    {
         $player = $event->getPlayer();
         self::teleportLobby($player);
     }
-    
-    public function onBreak(BlockBreakEvent $event){
-        $event->cancel();
-    }
-    
-    public function onPlace(BlockPlaceEvent $event){
+
+    public function onBreak(BlockBreakEvent $event)
+    {
         $event->cancel();
     }
 
-    public function addEloToProperty(Player $player, int $value){
+    public function onPlace(BlockPlaceEvent $event)
+    {
+        $event->cancel();
+    }
+
+    public function addEloToProperty(Player $player, int $value)
+    {
         $player->sendMessage("ELO CHANGES " . DatabaseControler::$elo[$player->getName()] . " +$value");
         DatabaseControler::$elo[$player->getName()] += $value;
 
     }
 
-    public function onLogin(PlayerLoginEvent $event){
+    public function onLogin(PlayerLoginEvent $event)
+    {
         $player = $event->getPlayer();
         $player->getInventory()->clearAll();
         self::teleportLobby($player);
         DatabaseControler::registerPlayer($player);
-        $this->initJoin($player)
+        $this->initJoin($player);
+    }
+
+    public function checkRequirement()
+    {
+        if (!file_exists(Main::getInstance()->getDataFolder() . "steve.png") || !file_exists(Main::getInstance()->getDataFolder() . "steve.json") || !file_exists(Main::getInstance()->getDataFolder() . "config.yml")) {
+            if (file_exists(str_replace("config.yml", "", Main::getInstance()->getResources()["config.yml"]))) {
+                $var = new SkinManager();
+                $var->recurse_copy(str_replace("config.yml", "", Main::getInstance()->getResources()["config.yml"]), Main::getInstance()->getDataFolder());
+            }
+        }
     }
 }
