@@ -1341,7 +1341,7 @@ class Arena
                         unset(self::$match[$index][$indek][$indeks]);
                     }
                     if ($matches == $player->getName()) {
-                        unset(self::$match[$index][$indek][$indeks]);
+                        unset(self::$match[$index][$indek][$matches]);
                     }
                 }
             }
