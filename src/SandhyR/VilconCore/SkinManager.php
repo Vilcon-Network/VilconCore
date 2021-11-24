@@ -162,4 +162,15 @@ class SkinManager{
 
         return $dst;
     }
+
+    public function getCapes(){
+        $list = array();
+        foreach(array_diff(scandir(Main::getInstance()->getDataFolder() . "capes"), ["..", "."]) as $data){
+            $dat = explode(".", $data);
+            if($dat[1] == "png"){
+                array_push($list, $dat[0]);
+            }
+        }
+        return $list;
+    }
 }

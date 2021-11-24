@@ -137,9 +137,10 @@ class ScoreboardTask  extends Task{
                                 if ($enemy->isOnline()) {
                                     $api->new($player, "SumoDuel", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
                                     $api->setLine($player, 1, TextFormat::WHITE . "Duel: " . TextFormat::AQUA . "Sumo");
-                                    $api->setLine($player, 2, TextFormat::WHITE . "Duration: " . TextFormat::AQUA . self::intToString(Arena::$duelTimer[$player->getName()]));
-                                    $api->setLine($player, 3, TextFormat::WHITE . "Your Ping: " . TextFormat::AQUA . $player->getNetworkSession()->getPing());
-                                    $api->setLine($player, 4, TextFormat::WHITE . "Their Ping: " . TextFormat::AQUA . $enemy->getNetworkSession()->getPing());
+                                    $api->setLine($player, 2, TextFormat::RED . "Opponent:");
+                                    $api->setLine($player, 3, TextFormat::WHITE . "Duration: " . TextFormat::AQUA . self::intToString(Arena::$duelTimer[$player->getName()]));
+                                    $api->setLine($player, 4, TextFormat::WHITE . "Your Ping: " . TextFormat::AQUA . $player->getNetworkSession()->getPing());
+                                    $api->setLine($player, 5, TextFormat::WHITE . "Their Ping: " . TextFormat::AQUA . $enemy->getNetworkSession()->getPing());
                                 }
                             }
                         }

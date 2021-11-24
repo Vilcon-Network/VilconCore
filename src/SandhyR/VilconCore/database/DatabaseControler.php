@@ -11,14 +11,18 @@ class DatabaseControler extends Database{
     public static $kill = [];
     public static $death = [];
     public static $elo = [];
+    public static $coins = [];
+    public static $cosmetic = [];
 
     public static function registerPlayer(Player $player)
     {
         $playername = $player->getName();
         if (parent::getDatabase()->query("SELECT * FROM playerstats WHERE username='$playername'")->fetch_row() == null and parent::getDatabase()->query("SELECT * FROM playerkit WHERE username='$playername'")->fetch_row() == null and parent::getDatabase()->query("SELECT * FROM playersetting WHERE username='$playername'")->fetch_row() == null) {
-            parent::getDatabase()->query("INSERT INTO playerstats VALUES (null, '$playername', 0, 0, 1, 0, 'DEFAULT', 100)");
+            parent::getDatabase()->query("INSERT INTO playerstats VALUES (null, '$playername', 0, 0, 1, 0, 'DEFAULT', 100, 0)");
             parent::getDatabase()->query("INSERT INTO playerkit VALUES (null, '$playername', 'default', 'default', 'default', 'default', 'default')");
             parent::getDatabase()->query("INSERT INTO playersetting VALUES (null, '$playername', 0, 0 , 1)");
+            $default = base64_encode(serialize(["wings" => [], "tags" => [], "sound" => [], "capes" => []]));
+            parent::getDatabase()->query("INSERT INTO playercosmetic VALUES (null , '$playername', '$default')");
             KitManager::$kit["nodebuff"][$player->getName()] = "default";
             KitManager::$kit["combo"][$player->getName()] = "default";
             KitManager::$kit["builduhc"][$player->getName()] = "default";
@@ -33,18 +37,24 @@ class DatabaseControler extends Database{
             KitManager::$kit["blockin"][$player->getName()] = $kit["blockinkit"];
         }
         $setting = parent::getDatabase()->query("SELECT * FROM playersetting WHERE username='$playername'")->fetch_assoc();
-        self::$kill[$player->getName()] = self::getKills($player);
-        self::$death[$player->getName()] = self::getDeath($player);
-        self::$elo[$player->getName()] = self::getElo($player);
+        $stats = parent::getDatabase()->query("SELECT * FROM playerstats WHERE username='$playername'")->fetch_assoc();
+        $cosmetic = parent::getDatabase()->query("SELECT * FROM playercosmetic WHERE username='$playername'")->fetch_assoc();
+        // 1x Query
+        self::$cosmetic[$player->getName()] = $cosmetic["cosmetics"];
+        self::$kill[$player->getName()] = $stats["kills"];
+        self::$death[$player->getName()] = $stats["deaths"];
+        self::$coins[$player->getName()] = $stats["coins"];
+        self::$elo[$player->getName()] = $stats["elo"];
         EventListener::$autogg[$player->getName()] = $setting["autogg"];
         EventListener::$autoez[$player->getName()] = $setting["autoez"];
         EventListener::$cpspopup[$player->getName()] = $setting["cpspopup"];
     }
 
     public static function init(){
-        parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playerstats (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, kills INT(11) NOT NULL, deaths INT(11) NOT NULL, levels INT(11) NOT NULL, exp INT(11) NOT NULL, ranks VARCHAR(255) NOT NULL, elo INT(11) NOT NULL);");
+        parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playerstats (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, kills INT(11) NOT NULL, deaths INT(11) NOT NULL, levels INT(11) NOT NULL, exp INT(11) NOT NULL, ranks VARCHAR(255) NOT NULL, elo INT(11) NOT NULL, coins INT(11) NOT NULL);");
         parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playerkit (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, nodebuffkit VARCHAR(255) NOT NULL, combokit VARCHAR(255) NOT NULL, builduhckit VARCHAR(255) NOT NULL, voidfightkit VARCHAR(255) NOT NULL,blockinkit VARCHAR(255) NOT NULL);");
         parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playersetting (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, autogg INT(11) NOT NULL, autoez INT(11) NOT NULL, cpspopup INT(11) NOT NULL);");
+        parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playercosmetic (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, cosmetics TEXT NOT NULL);");
     }
 
      public static function getKills(Player $player): int{
@@ -143,5 +153,15 @@ class DatabaseControler extends Database{
     public static function setElo(PLayer $player, int $value){
         $playername = $player->getName();
         parent::getDatabase()->query("UPDATE playerstats SET elo=$value WHERE username='$playername'");
+    }
+
+    public static function setCoin(Player $player, int $value){
+        $playername = $player->getName();
+        parent::getDatabase()->query("UPDATE playerstats SET coins=$value WHERE username='$playername'");
+    }
+
+    public static function setCosmetic(Player $player, string $value){
+        $playername = $player->getName();
+        parent::getDatabase()->query("UPDATE playercosmetic SET cosmetics='$value' WHERE username='$playername'");
     }
 }

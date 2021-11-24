@@ -65,7 +65,6 @@ class EventListener implements Listener
         if (in_array(strtolower($player->getName()), $kron)) {
             $player->teleport(Server::getInstance()->getWorldManager()->getWorldByName("kron")->getSafeSpawn());
             Main::getInstance()->getScheduler()->scheduleRepeatingTask(new KronTask($player), 0);
-            Server::getInstance()->broadcastMessage("Kron datang!!");
         } else {
             $player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(Main::getInstance()->getLobby())->getSafeSpawn());
         }
@@ -73,7 +72,9 @@ class EventListener implements Listener
         self::sendItem($player);
         $this->clicks[$event->getPlayer()->getName()] = [];
 //        $this->initJoin($player);
-        $player->setAllowFlight(true);
+        if($this->plugin->rank[$player->getName()] !== "DEFAULT"){
+            $player->setAllowFlight(true);
+        }
         if (count(Server::getInstance()->getOnlinePlayers()) - 1 == 0) {
             Main::getInstance()->antiCheatTask($this);
         }
@@ -160,13 +161,10 @@ class EventListener implements Listener
                     ++DatabaseControler::$kill[$killer->getName()];
                     ++DatabaseControler::$death[$player->getName()];
                     LevelManager::addExp($killer, mt_rand(20, 50));
+                    DatabaseControler::$coins[$player->getName()] += mt_rand(20, 50);
                     Utils::addSound($killer);
                 }
             }
-            $player->sendMessage("Your healt:" . $player->getHealth());
-            $player->sendMessage("Base Damage:" . $event->getBaseDamage());
-            $killer->sendMessage("Your healt:" . $killer->getHealth());
-            $killer->sendMessage("Base Damage:" . $event->getBaseDamage());
             $player->setHealth($player->getHealth());
             $killer->setHealth($killer->getHealth());
         }
@@ -180,6 +178,8 @@ class EventListener implements Listener
         $player->getInventory()->setItem(0, $item->get(ItemIds::DIAMOND_SWORD)->setCustomName("FFA"));
         $player->getInventory()->setItem(1, $item->get(ItemIds::IRON_SWORD)->setCustomName("Duels"));
         $player->getInventory()->setItem(2, $item->get(ItemIds::GOLD_SWORD)->setCustomName("Self Practice"));
+        $player->getInventory()->setItem(4, $item->get(ItemIds::COMPASS)->setCustomName("Cosmetic Shop"));
+        $player->getInventory()->setItem(5, $item->get(ItemIds::MOB_HEAD)->setCustomName("Cosmetic"));
     }
 
     public function onInteract(PlayerInteractEvent $event)
@@ -232,6 +232,32 @@ class EventListener implements Listener
                     Arena::unsetQueue($player);
                     $player->getInventory()->clearAll();
                     self::sendItem($player);
+                }
+                break;
+            case ItemIds::COMPASS:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    if (!isset($this->delay[$player->getName()])) {
+                        $form = new FormManager();
+                        $form->cosmeticshop($player);
+                        $this->delay[$player->getName()] = time();
+                    } else {
+                        if ($this->delay[$player->getName()] < time()) {
+                            unset($this->delay[$player->getName()]);
+                        }
+                    }
+                }
+                break;
+            case ItemIds::MOB_HEAD:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    if (!isset($this->delay[$player->getName()])) {
+                        $form = new FormManager();
+                        $form->usecosmeticform($player);
+                        $this->delay[$player->getName()] = time();
+                    } else {
+                        if ($this->delay[$player->getName()] < time()) {
+                            unset($this->delay[$player->getName()]);
+                        }
+                    }
                 }
         }
     }
@@ -316,6 +342,10 @@ class EventListener implements Listener
         DatabaseControler::setKill($player, DatabaseControler::$kill[$player->getName()]);
         DatabaseControler::setDeath($player, DatabaseControler::$death[$player->getName()]);
         DatabaseControler::setElo($player, DatabaseControler::$elo[$player->getName()]);
+        DatabaseControler::setCoin($player, DatabaseControler::$coins[$player->getName()]);
+        DatabaseControler::setCosmetic($player, DatabaseControler::$cosmetic[$player->getName()]);
+        unset(DatabaseControler::$kill[$player->getName()], DatabaseControler::$death[$player->getName()], DatabaseControler::$elo[$player->getName()], DatabaseControler::$coins[$player->getName()],
+            DatabaseControler::$cosmetic[$player->getName()]);
         unset(PlayerManager::$playerstatus[$player->getName()]);
     }
 
@@ -557,8 +587,10 @@ class EventListener implements Listener
         if($event->getTo()->getWorld()->getFolderName() == Main::getInstance()->getLobby()){
             if($entity instanceof Player){
                 PlayerManager::$playerstatus[$entity->getName()] = PlayerManager::LOBBY;
-                if(strtoupper($this->plugin->rank[$entity->getName()]) !== "DEFAULT"){
+                if(isset($this->plugin->rank[$entity->getName()])){
+                if(strtoupper($this->plugin->rank[$entity->getName()]) !== "DEFAULT") {
                     $entity->setAllowFlight(true);
+                }
                 }
             }
         } else {

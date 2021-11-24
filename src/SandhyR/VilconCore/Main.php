@@ -30,9 +30,18 @@ class Main extends PluginBase{
     public function onEnable(): void
     {
         @mkdir($this->getDataFolder());
+        @mkdir($this->getDataFolder() . "capes");
         $this->checkRequirement();
         @mkdir(Server::getInstance()->getDataPath() . "worldsbackup");
         $this->saveDefaultConfig();
+        $capes = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        if(is_array($capes->get("standard_capes"))) {
+            foreach ($capes->get("standard_capes") as $cape) {
+                $this->saveResource("$cape.png");
+            }
+            $capes->set("standard_capes", "done");
+            $capes->save();
+        }
         $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML, array());
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents(new AntiCheatListener(), $this);
