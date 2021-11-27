@@ -23,6 +23,7 @@ class Arena
     private static $possumo = [2134,24324,24342];
     private static $posvoidfight = [1231,1313,14142];
     public static $duelTimer = [];
+    public static $duelindex = 0;
 
 
     public static function addUnrankQueue(Player $player, int $queueid)
@@ -92,1224 +93,1284 @@ class Arena
     public static function startUnrankGame(int $id)
     {
 
-        switch ($id) {
-            case PlayerManager::NODEBUFF_DUEL:
-                if (isset(self::$unrankqueue["nodebuff"][0]) and isset(self::$unrankqueue["nodebuff"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["nodebuff"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["nodebuff"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$unrankqueue["nodebuff"][0]);
-                            unset(self::$unrankqueue["nodebuff"][1]);
-                            if (!isset(self::$match["unrank"]["nodebuff"])) {
-                                self::$match["unrank"]["nodebuff"] = [];
-                            }
-                            self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                            self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$unrankqueue["nodebuff"][0]);
-                                unset(self::$unrankqueue["nodebuff"][1]);
-                                if (!isset(self::$match["unrank"]["nodebuff"])) {
-                                    self::$match["unrank"]["nodebuff"] = [];
-                                }
-                                self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$unrankqueue["nodebuff"][0]);
-                                    unset(self::$unrankqueue["nodebuff"][1]);
-                                    if (!isset(self::$match["unrank"]["nodebuff"])) {
-                                        self::$match["unrank"]["nodebuff"] = [];
-                                    }
-                                    self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                    self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$unrankqueue["nodebuff"][0]);
-                                        unset(self::$unrankqueue["nodebuff"][1]);
-                                        if (!isset(self::$match["unrank"]["nodebuff"])) {
-                                            self::$match["unrank"]["nodebuff"] = [];
-                                        }
-                                        self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                        self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$unrankqueue["nodebuff"][0]);
-                                            unset(self::$unrankqueue["nodebuff"][1]);
-                                            if (!isset(self::$match["unrank"]["nodebuff"])) {
-                                                self::$match["unrank"]["nodebuff"] = [];
-                                            }
-                                            self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                            self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-                    }
+//        switch ($id) {
+//            case PlayerManager::NODEBUFF_DUEL:
+//                foreach (self::$unrankqueue["nodebuff"] as)
+//                if (isset(self::$unrankqueue["nodebuff"][0]) and isset(self::$unrankqueue["nodebuff"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["nodebuff"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["nodebuff"][1]);
+//                    var_dump("aaaa");
+//                    var_dump(self::$unrankqueue);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        var_dump(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers());
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$unrankqueue["nodebuff"][0]);
+//                            unset(self::$unrankqueue["nodebuff"][1]);
+//                            if (!isset(self::$match["unrank"]["nodebuff"])) {
+//                                self::$match["unrank"]["nodebuff"] = [];
+//                            }
+//                            self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                            self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$unrankqueue["nodebuff"][0]);
+//                                unset(self::$unrankqueue["nodebuff"][1]);
+//                                if (!isset(self::$match["unrank"]["nodebuff"])) {
+//                                    self::$match["unrank"]["nodebuff"] = [];
+//                                }
+//                                self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$unrankqueue["nodebuff"][0]);
+//                                    unset(self::$unrankqueue["nodebuff"][1]);
+//                                    if (!isset(self::$match["unrank"]["nodebuff"])) {
+//                                        self::$match["unrank"]["nodebuff"] = [];
+//                                    }
+//                                    self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                    self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$unrankqueue["nodebuff"][0]);
+//                                        unset(self::$unrankqueue["nodebuff"][1]);
+//                                        if (!isset(self::$match["unrank"]["nodebuff"])) {
+//                                            self::$match["unrank"]["nodebuff"] = [];
+//                                        }
+//                                        self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                        self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$unrankqueue["nodebuff"][0]);
+//                                            unset(self::$unrankqueue["nodebuff"][1]);
+//                                            if (!isset(self::$match["unrank"]["nodebuff"])) {
+//                                                self::$match["unrank"]["nodebuff"] = [];
+//                                            }
+//                                            self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                            self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//                    }
+//                }
+//                break;
+//            case PlayerManager::FIST_DUEL:
+//                if (isset(self::$unrankqueue["fist"][0]) and isset(self::$unrankqueue["nodebuff"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["fist"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["fist"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$unrankqueue["fist"][0]);
+//                            unset(self::$unrankqueue["fist"][1]);
+//                            if (!isset(self::$match["unrank"]["fist"])) {
+//                                self::$match["unrank"]["fist"] = [];
+//                            }
+//                            self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
+//                            self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$unrankqueue["nodebuff"][0]);
+//                                unset(self::$unrankqueue["nodebuff"][1]);
+//                                if (!isset(self::$match["unrank"]["nodebuff"])) {
+//                                    self::$match["unrank"]["nodebuff"] = [];
+//                                }
+//                                self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$unrankqueue["fist"][0]);
+//                                    unset(self::$unrankqueue["fist"][1]);
+//                                    if (!isset(self::$match["unrank"]["fist"])) {
+//                                        self::$match["unrank"]["fist"] = [];
+//                                    }
+//                                    self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
+//                                    self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$unrankqueue["fist"][0]);
+//                                        unset(self::$unrankqueue["fist"][1]);
+//                                        if (!isset(self::$match["unrank"]["fist"])) {
+//                                            self::$match["unrank"]["fist"] = [];
+//                                        }
+//                                        self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
+//                                        self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$unrankqueue["fist"][0]);
+//                                            unset(self::$unrankqueue["fist"][1]);
+//                                            if (!isset(self::$match["unrank"]["fist"])) {
+//                                                self::$match["unrank"]["fist"] = [];
+//                                            }
+//                                            self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
+//                                            self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//                    }
+//                }
+//                break;
+//            case PlayerManager::RESISTANCE_DUEL:
+//                if (isset(self::$unrankqueue["resistance"][0]) and isset(self::$unrankqueue["resistance"][0])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["resistance"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["resistance"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$unrankqueue["resistance"][0]);
+//                            unset(self::$unrankqueue["resistance"][1]);
+//                            if (!isset(self::$match["unrank"]["resistance"])) {
+//                                self::$match["unrank"]["resistance"] = [];
+//                            }
+//                            self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
+//                            self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$unrankqueue["resistance"][0]);
+//                                unset(self::$unrankqueue["resistance"][1]);
+//                                if (!isset(self::$match["unrank"]["resistance"])) {
+//                                    self::$match["unrank"]["resistance"] = [];
+//                                }
+//                                self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$unrankqueue["resistance"][0]);
+//                                    unset(self::$unrankqueue["resistance"][1]);
+//                                    if (!isset(self::$match["unrank"]["resistance"])) {
+//                                        self::$match["unrank"]["resistance"] = [];
+//                                    }
+//                                    self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                    self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$unrankqueue["resistance"][0]);
+//                                        unset(self::$unrankqueue["resistance"][1]);
+//                                        if (!isset(self::$match["unrank"]["resistance"])) {
+//                                            self::$match["unrank"]["resistance"] = [];
+//                                        }
+//                                        self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                        self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$unrankqueue["resistance"][0]);
+//                                            unset(self::$unrankqueue["resistance"][1]);
+//                                            if (!isset(self::$match["unrank"]["resistance"])) {
+//                                                self::$match["unrank"]["resistance"] = [];
+//                                            }
+//                                            self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                            self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//                    }
+//                }
+//                break;
+//            case PlayerManager::BOXING_DUEL:
+//                if (isset(self::$unrankqueue["boxing"][0]) and isset(self::$unrankqueue["boxing"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["boxing"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["boxing"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$unrankqueue["boxing"][0]);
+//                            unset(self::$unrankqueue["boxing"][1]);
+//                            if (!isset(self::$match["unrank"]["boxing"])) {
+//                                self::$match["unrank"]["boxing"] = [];
+//                            }
+//                            self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
+//                            self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$unrankqueue["boxing"][0]);
+//                                unset(self::$unrankqueue["boxing"][1]);
+//                                if (!isset(self::$match["unrank"]["boxing"])) {
+//                                    self::$match["unrank"]["boxing"] = [];
+//                                }
+//                                self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$unrankqueue["boxing"][0]);
+//                                    unset(self::$unrankqueue["boxing"][1]);
+//                                    if (!isset(self::$match["unrank"]["boxing"])) {
+//                                        self::$match["unrank"]["boxing"] = [];
+//                                    }
+//                                    self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                    self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$unrankqueue["boxing"][0]);
+//                                        unset(self::$unrankqueue["boxing"][1]);
+//                                        if (!isset(self::$match["unrank"]["boxing"])) {
+//                                            self::$match["unrank"]["boxing"] = [];
+//                                        }
+//                                        self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                        self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$unrankqueue["boxing"][0]);
+//                                            unset(self::$unrankqueue["boxing"][1]);
+//                                            if (!isset(self::$match["unrank"]["boxing"])) {
+//                                                self::$match["unrank"]["boxing"] = [];
+//                                            }
+//                                            self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                            self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//
+//                    }
+//                }
+//                break;
+//            case PlayerManager::SUMO_DUEL:
+//                if (isset(self::$unrankqueue["sumo"][0]) and isset(self::$unrankqueue["sumo"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["sumo"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["sumo"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$unrankqueue["sumo"][0]);
+//                            unset(self::$unrankqueue["sumo"][1]);
+//                            if (!isset(self::$match["unrank"]["sumo"])) {
+//                                self::$match["unrank"]["sumo"] = [];
+//                            }
+//                            self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
+//                            self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$unrankqueue["sumo"][0]);
+//                                unset(self::$unrankqueue["sumo"][1]);
+//                                if (!isset(self::$match["unrank"]["sumo"])) {
+//                                    self::$match["unrank"]["sumo"] = [];
+//                                }
+//                                self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                    $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$unrankqueue["sumo"][0]);
+//                                    unset(self::$unrankqueue["sumo"][1]);
+//                                    if (!isset(self::$match["unrank"]["sumo"])) {
+//                                        self::$match["unrank"]["sumo"] = [];
+//                                    }
+//                                    self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                    self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                        $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$unrankqueue["sumo"][0]);
+//                                        unset(self::$unrankqueue["sumo"][1]);
+//                                        if (!isset(self::$match["unrank"]["sumo"])) {
+//                                            self::$match["unrank"]["sumo"] = [];
+//                                        }
+//                                        self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                        self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$unrankqueue["sumo"][0]);
+//                                            unset(self::$unrankqueue["sumo"][1]);
+//                                            if (!isset(self::$match["unrank"]["sumo"])) {
+//                                                self::$match["unrank"]["sumo"] = [];
+//                                            }
+//                                            self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                            self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//
+//                    }
+//                }
+//                break;
+//            case PlayerManager::VOIDFIGHT_DUEL:
+//                if (isset(self::$unrankqueue["voidfight"][0]) and isset(self::$unrankqueue["voidfight"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["voidfight"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["voidfight"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        ArenaResetter::reset("voidfight");
+//                        var_dump(Server::getInstance()->getWorldManager()->getWorldByName("voidfight"));
+//                        if(Server::getInstance()->getWorldManager()->getWorldByName("voidfight")->isLoaded()) {
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posvoidfight[0], self::$posvoidfight[1], self::$posvoidfight[2]));
+//                            $p2->teleport(new Vector3(self::$posvoidfight[0], self::$posvoidfight[1], self::$posvoidfight[2]));
+//                        }
+//                    }
+//                }
+//                break;
+//            case PlayerManager::GAPPLE_DUEL:
+//                if (isset(self::$unrankqueue["gapple"][0]) and isset(self::$unrankqueue["gapple"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["gapple"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["gapple"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$unrankqueue["gapple"][0]);
+//                            unset(self::$unrankqueue["gapple"][1]);
+//                            if (!isset(self::$match["unrank"]["gapple"])) {
+//                                self::$match["unrank"]["gapple"] = [];
+//                            }
+//                            self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
+//                            self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$unrankqueue["gapple"][0]);
+//                                unset(self::$unrankqueue["gapple"][1]);
+//                                if (!isset(self::$match["unrank"]["gapple"])) {
+//                                    self::$match["unrank"]["gapple"] = [];
+//                                }
+//                                self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$unrankqueue["gapple"][0]);
+//                                    unset(self::$unrankqueue["gapple"][1]);
+//                                    if (!isset(self::$match["unrank"]["gapple"])) {
+//                                        self::$match["unrank"]["gapple"] = [];
+//                                    }
+//                                    self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                    self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$unrankqueue["gapple"][0]);
+//                                        unset(self::$unrankqueue["gapple"][1]);
+//                                        if (!isset(self::$match["unrank"]["gapple"])) {
+//                                            self::$match["unrank"]["gapple"] = [];
+//                                        }
+//                                        self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                        self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$unrankqueue["gapple"][0]);
+//                                            unset(self::$unrankqueue["gapple"][1]);
+//                                            if (!isset(self::$match["unrank"]["gapple"])) {
+//                                                self::$match["unrank"]["gapple"] = [];
+//                                            }
+//                                            self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                            self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                    Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//                }
+//        }
+        $ids = [PlayerManager::BOXING_DUEL => "boxing", PlayerManager::FIST_DUEL => "fist", PlayerManager::NODEBUFF_DUEL => "nodebuff", PlayerManager::SUMO_DUEL => "sumo", PlayerManager::VOIDFIGHT_DUEL => "voidfight", PlayerManager::GAPPLE_DUEL => "gapple"];
+        $manager = new KitManager();
+        $index = [];
+        foreach (self::$unrankqueue[$ids[$id]] as $key => $value) {
+            $index[] = $key;
+        }
+        if (count($index) == 2) {
+            $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue[$ids[$id]][$index[0]]);
+            $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue[$ids[$id]][$index[1]]);
+            if ($p1->isOnline() and $p2->isOnline()) {
+                Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
+                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                $manager->sendDuelKit($p1, $id);
+                $manager->sendDuelKit($p2, $id);
+                unset(self::$unrankqueue[$ids[$id]][$index[0]]);
+                unset(self::$unrankqueue[$ids[$id]][$index[1]]);
+                if (!isset(self::$match["unrank"][$ids[$id]])) {
+                    self::$match["unrank"][$ids[$id]] = [];
                 }
-                break;
-            case PlayerManager::FIST_DUEL:
-                if (isset(self::$unrankqueue["fist"][0]) and isset(self::$unrankqueue["nodebuff"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["fist"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["fist"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$unrankqueue["fist"][0]);
-                            unset(self::$unrankqueue["fist"][1]);
-                            if (!isset(self::$match["unrank"]["fist"])) {
-                                self::$match["unrank"]["fist"] = [];
-                            }
-                            self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
-                            self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$unrankqueue["nodebuff"][0]);
-                                unset(self::$unrankqueue["nodebuff"][1]);
-                                if (!isset(self::$match["unrank"]["nodebuff"])) {
-                                    self::$match["unrank"]["nodebuff"] = [];
-                                }
-                                self::$match["unrank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                self::$match["unrank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$unrankqueue["fist"][0]);
-                                    unset(self::$unrankqueue["fist"][1]);
-                                    if (!isset(self::$match["unrank"]["fist"])) {
-                                        self::$match["unrank"]["fist"] = [];
-                                    }
-                                    self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
-                                    self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$unrankqueue["fist"][0]);
-                                        unset(self::$unrankqueue["fist"][1]);
-                                        if (!isset(self::$match["unrank"]["fist"])) {
-                                            self::$match["unrank"]["fist"] = [];
-                                        }
-                                        self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
-                                        self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$unrankqueue["fist"][0]);
-                                            unset(self::$unrankqueue["fist"][1]);
-                                            if (!isset(self::$match["unrank"]["fist"])) {
-                                                self::$match["unrank"]["fist"] = [];
-                                            }
-                                            self::$match["unrank"]["fist"][$p1->getName()] = $p2->getName();
-                                            self::$match["unrank"]["fist"][$p2->getName()] = $p1->getName();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-                    }
-                }
-                break;
-            case PlayerManager::RESISTANCE_DUEL:
-                if (isset(self::$unrankqueue["resistance"][0]) and isset(self::$unrankqueue["resistance"][0])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["resistance"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["resistance"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$unrankqueue["resistance"][0]);
-                            unset(self::$unrankqueue["resistance"][1]);
-                            if (!isset(self::$match["unrank"]["resistance"])) {
-                                self::$match["unrank"]["resistance"] = [];
-                            }
-                            self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
-                            self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$unrankqueue["resistance"][0]);
-                                unset(self::$unrankqueue["resistance"][1]);
-                                if (!isset(self::$match["unrank"]["resistance"])) {
-                                    self::$match["unrank"]["resistance"] = [];
-                                }
-                                self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
-                                self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$unrankqueue["resistance"][0]);
-                                    unset(self::$unrankqueue["resistance"][1]);
-                                    if (!isset(self::$match["unrank"]["resistance"])) {
-                                        self::$match["unrank"]["resistance"] = [];
-                                    }
-                                    self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
-                                    self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$unrankqueue["resistance"][0]);
-                                        unset(self::$unrankqueue["resistance"][1]);
-                                        if (!isset(self::$match["unrank"]["resistance"])) {
-                                            self::$match["unrank"]["resistance"] = [];
-                                        }
-                                        self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
-                                        self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$unrankqueue["resistance"][0]);
-                                            unset(self::$unrankqueue["resistance"][1]);
-                                            if (!isset(self::$match["unrank"]["resistance"])) {
-                                                self::$match["unrank"]["resistance"] = [];
-                                            }
-                                            self::$match["unrank"]["resistance"][$p1->getName()] = $p2->getName();
-                                            self::$match["unrank"]["resistance"][$p2->getName()] = $p1->getName();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-                    }
-                }
-                break;
-            case PlayerManager::BOXING_DUEL:
-                if (isset(self::$unrankqueue["boxing"][0]) and isset(self::$unrankqueue["boxing"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["boxing"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["boxing"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$unrankqueue["boxing"][0]);
-                            unset(self::$unrankqueue["boxing"][1]);
-                            if (!isset(self::$match["unrank"]["boxing"])) {
-                                self::$match["unrank"]["boxing"] = [];
-                            }
-                            self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
-                            self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$unrankqueue["boxing"][0]);
-                                unset(self::$unrankqueue["boxing"][1]);
-                                if (!isset(self::$match["unrank"]["boxing"])) {
-                                    self::$match["unrank"]["boxing"] = [];
-                                }
-                                self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
-                                self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$unrankqueue["boxing"][0]);
-                                    unset(self::$unrankqueue["boxing"][1]);
-                                    if (!isset(self::$match["unrank"]["boxing"])) {
-                                        self::$match["unrank"]["boxing"] = [];
-                                    }
-                                    self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
-                                    self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$unrankqueue["boxing"][0]);
-                                        unset(self::$unrankqueue["boxing"][1]);
-                                        if (!isset(self::$match["unrank"]["boxing"])) {
-                                            self::$match["unrank"]["boxing"] = [];
-                                        }
-                                        self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
-                                        self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$unrankqueue["boxing"][0]);
-                                            unset(self::$unrankqueue["boxing"][1]);
-                                            if (!isset(self::$match["unrank"]["boxing"])) {
-                                                self::$match["unrank"]["boxing"] = [];
-                                            }
-                                            self::$match["unrank"]["boxing"][$p1->getName()] = $p2->getName();
-                                            self::$match["unrank"]["boxing"][$p2->getName()] = $p1->getName();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-
-                    }
-                }
-                break;
-            case PlayerManager::SUMO_DUEL:
-                if (isset(self::$unrankqueue["sumo"][0]) and isset(self::$unrankqueue["sumo"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["sumo"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["sumo"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$unrankqueue["sumo"][0]);
-                            unset(self::$unrankqueue["sumo"][1]);
-                            if (!isset(self::$match["unrank"]["sumo"])) {
-                                self::$match["unrank"]["sumo"] = [];
-                            }
-                            self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
-                            self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$unrankqueue["sumo"][0]);
-                                unset(self::$unrankqueue["sumo"][1]);
-                                if (!isset(self::$match["unrank"]["sumo"])) {
-                                    self::$match["unrank"]["sumo"] = [];
-                                }
-                                self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
-                                self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                    $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$unrankqueue["sumo"][0]);
-                                    unset(self::$unrankqueue["sumo"][1]);
-                                    if (!isset(self::$match["unrank"]["sumo"])) {
-                                        self::$match["unrank"]["sumo"] = [];
-                                    }
-                                    self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
-                                    self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                        $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$unrankqueue["sumo"][0]);
-                                        unset(self::$unrankqueue["sumo"][1]);
-                                        if (!isset(self::$match["unrank"]["sumo"])) {
-                                            self::$match["unrank"]["sumo"] = [];
-                                        }
-                                        self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
-                                        self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("sumoduel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$unrankqueue["sumo"][0]);
-                                            unset(self::$unrankqueue["sumo"][1]);
-                                            if (!isset(self::$match["unrank"]["sumo"])) {
-                                                self::$match["unrank"]["sumo"] = [];
-                                            }
-                                            self::$match["unrank"]["sumo"][$p1->getName()] = $p2->getName();
-                                            self::$match["unrank"]["sumo"][$p2->getName()] = $p1->getName();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-
-                    }
-                }
-                break;
-            case PlayerManager::VOIDFIGHT_DUEL:
-                if (isset(self::$unrankqueue["voidfight"][0]) and isset(self::$unrankqueue["voidfight"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["voidfight"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["voidfight"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        ArenaResetter::reset("voidfight");
-                        var_dump(Server::getInstance()->getWorldManager()->getWorldByName("voidfight"));
-                        if(Server::getInstance()->getWorldManager()->getWorldByName("voidfight")->isLoaded()) {
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posvoidfight[0], self::$posvoidfight[1], self::$posvoidfight[2]));
-                            $p2->teleport(new Vector3(self::$posvoidfight[0], self::$posvoidfight[1], self::$posvoidfight[2]));
-                        }
-                    }
-                }
-                break;
-            case PlayerManager::GAPPLE_DUEL:
-                if (isset(self::$unrankqueue["gapple"][0]) and isset(self::$unrankqueue["gapple"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue["gapple"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue["gapple"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$unrankqueue["gapple"][0]);
-                            unset(self::$unrankqueue["gapple"][1]);
-                            if (!isset(self::$match["unrank"]["gapple"])) {
-                                self::$match["unrank"]["gapple"] = [];
-                            }
-                            self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
-                            self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$unrankqueue["gapple"][0]);
-                                unset(self::$unrankqueue["gapple"][1]);
-                                if (!isset(self::$match["unrank"]["gapple"])) {
-                                    self::$match["unrank"]["gapple"] = [];
-                                }
-                                self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
-                                self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$unrankqueue["gapple"][0]);
-                                    unset(self::$unrankqueue["gapple"][1]);
-                                    if (!isset(self::$match["unrank"]["gapple"])) {
-                                        self::$match["unrank"]["gapple"] = [];
-                                    }
-                                    self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
-                                    self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$unrankqueue["gapple"][0]);
-                                        unset(self::$unrankqueue["gapple"][1]);
-                                        if (!isset(self::$match["unrank"]["gapple"])) {
-                                            self::$match["unrank"]["gapple"] = [];
-                                        }
-                                        self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
-                                        self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$unrankqueue["gapple"][0]);
-                                            unset(self::$unrankqueue["gapple"][1]);
-                                            if (!isset(self::$match["unrank"]["gapple"])) {
-                                                self::$match["unrank"]["gapple"] = [];
-                                            }
-                                            self::$match["unrank"]["gapple"][$p1->getName()] = $p2->getName();
-                                            self::$match["unrank"]["gapple"][$p2->getName()] = $p1->getName();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-                }
+                self::$match["unrank"][$ids[$id]][$p1->getName()] = $p2->getName();
+                self::$match["unrank"][$ids[$id]][$p2->getName()] = $p1->getName();
+                ++self::$duelindex;
+                Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+            }
         }
     }
 
     public static function startrankGame(int $id)
     {
-        switch ($id) {
-            case PlayerManager::NODEBUFF_DUEL:
-                if (isset(self::$rankqueue["nodebuff"][0]) and isset(self::$rankqueue["nodebuff"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["nodebuff"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["nodebuff"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$rankqueue["nodebuff"][0]);
-                            unset(self::$rankqueue["nodebuff"][1]);
-                            if (!isset(self::$match["rank"]["nodebuff"])) {
-                                self::$match["rank"]["nodebuff"] = [];
-                            }
-                            self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                            self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$rankqueue["nodebuff"][0]);
-                                unset(self::$rankqueue["nodebuff"][1]);
-                                if (!isset(self::$match["rank"]["nodebuff"])) {
-                                    self::$match["rank"]["nodebuff"] = [];
-                                }
-                                self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                                PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                PlayerManager::$playerstatus[$p2->getName()] = $id;
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$rankqueue["nodebuff"][0]);
-                                    unset(self::$rankqueue["nodebuff"][1]);
-                                    if (!isset(self::$match["rank"]["nodebuff"])) {
-                                        self::$match["rank"]["nodebuff"] = [];
-                                    }
-                                    self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                    self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$rankqueue["nodebuff"][0]);
-                                        unset(self::$rankqueue["nodebuff"][1]);
-                                        if (!isset(self::$match["rank"]["nodebuff"])) {
-                                            self::$match["rank"]["nodebuff"] = [];
-                                        }
-                                        self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                        self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$rankqueue["nodebuff"][0]);
-                                            unset(self::$rankqueue["nodebuff"][1]);
-                                            if (!isset(self::$match["rank"]["nodebuff"])) {
-                                                self::$match["rank"]["nodebuff"] = [];
-                                            }
-                                            self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
-                                            self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
-                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-
-                    }
+//        switch ($id) {
+//            case PlayerManager::NODEBUFF_DUEL:
+//                if (isset(self::$rankqueue["nodebuff"][0]) and isset(self::$rankqueue["nodebuff"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["nodebuff"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["nodebuff"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$rankqueue["nodebuff"][0]);
+//                            unset(self::$rankqueue["nodebuff"][1]);
+//                            if (!isset(self::$match["rank"]["nodebuff"])) {
+//                                self::$match["rank"]["nodebuff"] = [];
+//                            }
+//                            self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                            self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$rankqueue["nodebuff"][0]);
+//                                unset(self::$rankqueue["nodebuff"][1]);
+//                                if (!isset(self::$match["rank"]["nodebuff"])) {
+//                                    self::$match["rank"]["nodebuff"] = [];
+//                                }
+//                                self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                                PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$rankqueue["nodebuff"][0]);
+//                                    unset(self::$rankqueue["nodebuff"][1]);
+//                                    if (!isset(self::$match["rank"]["nodebuff"])) {
+//                                        self::$match["rank"]["nodebuff"] = [];
+//                                    }
+//                                    self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                    self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$rankqueue["nodebuff"][0]);
+//                                        unset(self::$rankqueue["nodebuff"][1]);
+//                                        if (!isset(self::$match["rank"]["nodebuff"])) {
+//                                            self::$match["rank"]["nodebuff"] = [];
+//                                        }
+//                                        self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                        self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$rankqueue["nodebuff"][0]);
+//                                            unset(self::$rankqueue["nodebuff"][1]);
+//                                            if (!isset(self::$match["rank"]["nodebuff"])) {
+//                                                self::$match["rank"]["nodebuff"] = [];
+//                                            }
+//                                            self::$match["rank"]["nodebuff"][$p1->getName()] = $p2->getName();
+//                                            self::$match["rank"]["nodebuff"][$p2->getName()] = $p1->getName();
+//                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//
+//                    }
+//                }
+//                break;
+//            case PlayerManager::FIST_DUEL:
+//                if (isset(self::$rankqueue["fist"][0]) and isset(self::$rankqueue["fist"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["fist"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["fist"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$rankqueue["fist"][0]);
+//                            unset(self::$rankqueue["fist"][1]);
+//                            if (!isset(self::$match["rank"]["fist"])) {
+//                                self::$match["rank"]["fist"] = [];
+//                            }
+//                            self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
+//                            self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
+//                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$rankqueue["fist"][0]);
+//                                unset(self::$rankqueue["fist"][1]);
+//                                if (!isset(self::$match["rank"]["fist"])) {
+//                                    self::$match["rank"]["fist"] = [];
+//                                }
+//                                self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
+//                                self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
+//                                PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$rankqueue["fist"][0]);
+//                                    unset(self::$rankqueue["fist"][1]);
+//                                    if (!isset(self::$match["rank"]["fist"])) {
+//                                        self::$match["rank"]["fist"] = [];
+//                                    }
+//                                    self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
+//                                    self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
+//                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$rankqueue["fist"][0]);
+//                                        unset(self::$rankqueue["fist"][1]);
+//                                        if (!isset(self::$match["rank"]["fist"])) {
+//                                            self::$match["rank"]["fist"] = [];
+//                                        }
+//                                        self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
+//                                        self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
+//                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$rankqueue["fist"][0]);
+//                                            unset(self::$rankqueue["fist"][1]);
+//                                            if (!isset(self::$match["rank"]["fist"])) {
+//                                                self::$match["rank"]["fist"] = [];
+//                                            }
+//                                            self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
+//                                            self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
+//                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//
+//                    }
+//                }
+//                break;
+//            case PlayerManager::RESISTANCE_DUEL:
+//                if (isset(self::$rankqueue["resistance"][0]) and isset(self::$rankqueue["resistance"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["resistance"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["resistance"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$rankqueue["resistance"][0]);
+//                            unset(self::$rankqueue["resistance"][1]);
+//                            if (!isset(self::$match["rank"]["resistance"])) {
+//                                self::$match["rank"]["resistance"] = [];
+//                            }
+//                            self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
+//                            self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
+//                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$rankqueue["resistance"][0]);
+//                                unset(self::$rankqueue["resistance"][1]);
+//                                if (!isset(self::$match["rank"]["resistance"])) {
+//                                    self::$match["rank"]["resistance"] = [];
+//                                }
+//                                self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
+//                                PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$rankqueue["resistance"][0]);
+//                                    unset(self::$rankqueue["resistance"][1]);
+//                                    if (!isset(self::$match["rank"]["resistance"])) {
+//                                        self::$match["rank"]["resistance"] = [];
+//                                    }
+//                                    self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                    self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
+//                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$rankqueue["resistance"][0]);
+//                                        unset(self::$rankqueue["resistance"][1]);
+//                                        if (!isset(self::$match["rank"]["resistance"])) {
+//                                            self::$match["rank"]["resistance"] = [];
+//                                        }
+//                                        self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                        self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
+//                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$rankqueue["resistance"][0]);
+//                                            unset(self::$rankqueue["resistance"][1]);
+//                                            if (!isset(self::$match["rank"]["resistance"])) {
+//                                                self::$match["rank"]["resistance"] = [];
+//                                            }
+//                                            self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
+//                                            self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
+//                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//
+//                    }
+//                }
+//                break;
+//            case PlayerManager::BOXING_DUEL:
+//                if (isset(self::$rankqueue["boxing"][0]) and isset(self::$rankqueue["boxing"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["boxing"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["boxing"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$rankqueue["boxing"][0]);
+//                            unset(self::$rankqueue["boxing"][1]);
+//                            if (!isset(self::$match["rank"]["boxing"])) {
+//                                self::$match["rank"]["boxing"] = [];
+//                            }
+//                            self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
+//                            self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
+//                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$rankqueue["boxing"][0]);
+//                                unset(self::$rankqueue["boxing"][1]);
+//                                if (!isset(self::$match["rank"]["boxing"])) {
+//                                    self::$match["rank"]["boxing"] = [];
+//                                }
+//                                self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
+//                                PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$rankqueue["boxing"][0]);
+//                                    unset(self::$rankqueue["boxing"][1]);
+//                                    if (!isset(self::$match["rank"]["boxing"])) {
+//                                        self::$match["rank"]["boxing"] = [];
+//                                    }
+//                                    self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                    self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
+//                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$rankqueue["boxing"][0]);
+//                                        unset(self::$rankqueue["boxing"][1]);
+//                                        if (!isset(self::$match["rank"]["boxing"])) {
+//                                            self::$match["rank"]["boxing"] = [];
+//                                        }
+//                                        self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                        self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
+//                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$rankqueue["boxing"][0]);
+//                                            unset(self::$rankqueue["boxing"][1]);
+//                                            if (!isset(self::$match["rank"]["boxing"])) {
+//                                                self::$match["rank"]["boxing"] = [];
+//                                            }
+//                                            self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
+//                                            self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
+//                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//
+//                    }
+//                }
+//                break;
+//            case PlayerManager::SUMO_DUEL:
+//                if (isset(self::$rankqueue["sumo"][0]) and isset(self::$rankqueue["sumo"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["sumo"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["sumo"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$rankqueue["sumo"][0]);
+//                            unset(self::$rankqueue["sumo"][1]);
+//                            if (!isset(self::$match["rank"]["sumo"])) {
+//                                self::$match["rank"]["sumo"] = [];
+//                            }
+//                            self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
+//                            self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
+//                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$rankqueue["sumo"][0]);
+//                                unset(self::$rankqueue["sumo"][1]);
+//                                if (!isset(self::$match["rank"]["sumo"])) {
+//                                    self::$match["rank"]["sumo"] = [];
+//                                }
+//                                self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
+//                                PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                    $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$rankqueue["sumo"][0]);
+//                                    unset(self::$rankqueue["sumo"][1]);
+//                                    if (!isset(self::$match["rank"]["sumo"])) {
+//                                        self::$match["rank"]["sumo"] = [];
+//                                    }
+//                                    self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                    self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
+//                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                        $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$rankqueue["sumo"][0]);
+//                                        unset(self::$rankqueue["sumo"][1]);
+//                                        if (!isset(self::$match["rank"]["sumo"])) {
+//                                            self::$match["rank"]["sumo"] = [];
+//                                        }
+//                                        self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                        self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
+//                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$rankqueue["sumo"][0]);
+//                                            unset(self::$rankqueue["sumo"][1]);
+//                                            if (!isset(self::$match["rank"]["sumo"])) {
+//                                                self::$match["rank"]["sumo"] = [];
+//                                            }
+//                                            self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
+//                                            self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
+//                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//
+//                    }
+//                }
+//                break;
+//            case PlayerManager::VOIDFIGHT_DUEL:
+//                if (isset(self::$rankqueue["voidfight"][0]) and isset(self::$rankqueue["voidfight"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["voidfight"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["voidfight"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        ArenaResetter::reset("voidfight");
+//                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+//                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+//                        $p1->teleport(new Vector3(self::$posvoidfight[0],self::$posvoidfight[1], self::$posvoidfight[2]));
+//                        $p2->teleport(new Vector3(self::$posvoidfight[0],self::$posvoidfight[1], self::$posvoidfight[2]));
+//                    }
+//                }
+//                break;
+//            case PlayerManager::GAPPLE_DUEL:
+//                if (isset(self::$rankqueue["gapple"][0]) and isset(self::$rankqueue["gapple"][1])) {
+//                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["gapple"][0]);
+//                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["gapple"][1]);
+//                    if ($p1->isOnline() and $p2->isOnline()) {
+//                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
+//                            $manager = new KitManager();
+//                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
+//                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                            $manager->sendDuelKit($p1, $id);
+//                            $manager->sendDuelKit($p2, $id);
+//                            unset(self::$rankqueue["gapple"][0]);
+//                            unset(self::$rankqueue["gapple"][1]);
+//                            if (!isset(self::$match["rank"]["gapple"])) {
+//                                self::$match["rank"]["gapple"] = [];
+//                            }
+//                            self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
+//                            self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
+//                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                        } else {
+//                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
+//                                $manager = new KitManager();
+//                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
+//                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                $manager->sendDuelKit($p1, $id);
+//                                $manager->sendDuelKit($p2, $id);
+//                                unset(self::$rankqueue["gapple"][0]);
+//                                unset(self::$rankqueue["gapple"][1]);
+//                                if (!isset(self::$match["rank"]["gapple"])) {
+//                                    self::$match["rank"]["gapple"] = [];
+//                                }
+//                                self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
+//                                PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                            } else {
+//                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
+//                                    $manager = new KitManager();
+//                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
+//                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                    $manager->sendDuelKit($p1, $id);
+//                                    $manager->sendDuelKit($p2, $id);
+//                                    unset(self::$rankqueue["gapple"][0]);
+//                                    unset(self::$rankqueue["gapple"][1]);
+//                                    if (!isset(self::$match["rank"]["gapple"])) {
+//                                        self::$match["rank"]["gapple"] = [];
+//                                    }
+//                                    self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                    self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
+//                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                } else {
+//                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
+//                                        $manager = new KitManager();
+//                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
+//                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                        $manager->sendDuelKit($p1, $id);
+//                                        $manager->sendDuelKit($p2, $id);
+//                                        unset(self::$rankqueue["gapple"][0]);
+//                                        unset(self::$rankqueue["gapple"][1]);
+//                                        if (!isset(self::$match["rank"]["gapple"])) {
+//                                            self::$match["rank"]["gapple"] = [];
+//                                        }
+//                                        self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                        self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
+//                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                    } else {
+//                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
+//                                            $manager = new KitManager();
+//                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
+//                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
+//                                            $manager->sendDuelKit($p1, $id);
+//                                            $manager->sendDuelKit($p2, $id);
+//                                            unset(self::$rankqueue["gapple"][0]);
+//                                            unset(self::$rankqueue["gapple"][1]);
+//                                            if (!isset(self::$match["rank"]["gapple"])) {
+//                                                self::$match["rank"]["gapple"] = [];
+//                                            }
+//                                            self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
+//                                            self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
+//                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
+//                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+//                    }
+//
+//                }
+//        }
+        $ids = [PlayerManager::BOXING_DUEL => "boxing", PlayerManager::FIST_DUEL => "fist", PlayerManager::NODEBUFF_DUEL => "nodebuff", PlayerManager::SUMO_DUEL => "sumo", PlayerManager::VOIDFIGHT_DUEL => "voidfight", PlayerManager::GAPPLE_DUEL => "gapple"];
+        $manager = new KitManager();
+        $index = [];
+        foreach (self::$rankqueue[$ids[$id]] as $key => $value) {
+            $index[] = $key;
+        }
+        if (count($index) == 2) {
+            $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[0]]);
+            $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[1]]);
+            if ($p1->isOnline() and $p2->isOnline()) {
+                Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
+                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
+                $manager->sendDuelKit($p1, $id);
+                $manager->sendDuelKit($p2, $id);
+                unset(self::$rankqueue[$ids[$id]][$index[0]]);
+                unset(self::$rankqueue[$ids[$id]][$index[1]]);
+                if (!isset(self::$match["rank"][$ids[$id]])) {
+                    self::$match["rank"][$ids[$id]] = [];
                 }
-                break;
-            case PlayerManager::FIST_DUEL:
-                if (isset(self::$rankqueue["fist"][0]) and isset(self::$rankqueue["fist"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["fist"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["fist"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$rankqueue["fist"][0]);
-                            unset(self::$rankqueue["fist"][1]);
-                            if (!isset(self::$match["rank"]["fist"])) {
-                                self::$match["rank"]["fist"] = [];
-                            }
-                            self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
-                            self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
-                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$rankqueue["fist"][0]);
-                                unset(self::$rankqueue["fist"][1]);
-                                if (!isset(self::$match["rank"]["fist"])) {
-                                    self::$match["rank"]["fist"] = [];
-                                }
-                                self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
-                                self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
-                                PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                PlayerManager::$playerstatus[$p2->getName()] = $id;
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$rankqueue["fist"][0]);
-                                    unset(self::$rankqueue["fist"][1]);
-                                    if (!isset(self::$match["rank"]["fist"])) {
-                                        self::$match["rank"]["fist"] = [];
-                                    }
-                                    self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
-                                    self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
-                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$rankqueue["fist"][0]);
-                                        unset(self::$rankqueue["fist"][1]);
-                                        if (!isset(self::$match["rank"]["fist"])) {
-                                            self::$match["rank"]["fist"] = [];
-                                        }
-                                        self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
-                                        self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
-                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$rankqueue["fist"][0]);
-                                            unset(self::$rankqueue["fist"][1]);
-                                            if (!isset(self::$match["rank"]["fist"])) {
-                                                self::$match["rank"]["fist"] = [];
-                                            }
-                                            self::$match["rank"]["fist"][$p1->getName()] = $p2->getName();
-                                            self::$match["rank"]["fist"][$p2->getName()] = $p1->getName();
-                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-
-                    }
-                }
-                break;
-            case PlayerManager::RESISTANCE_DUEL:
-                if (isset(self::$rankqueue["resistance"][0]) and isset(self::$rankqueue["resistance"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["resistance"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["resistance"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$rankqueue["resistance"][0]);
-                            unset(self::$rankqueue["resistance"][1]);
-                            if (!isset(self::$match["rank"]["resistance"])) {
-                                self::$match["rank"]["resistance"] = [];
-                            }
-                            self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
-                            self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
-                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$rankqueue["resistance"][0]);
-                                unset(self::$rankqueue["resistance"][1]);
-                                if (!isset(self::$match["rank"]["resistance"])) {
-                                    self::$match["rank"]["resistance"] = [];
-                                }
-                                self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
-                                self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
-                                PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                PlayerManager::$playerstatus[$p2->getName()] = $id;
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$rankqueue["resistance"][0]);
-                                    unset(self::$rankqueue["resistance"][1]);
-                                    if (!isset(self::$match["rank"]["resistance"])) {
-                                        self::$match["rank"]["resistance"] = [];
-                                    }
-                                    self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
-                                    self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
-                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$rankqueue["resistance"][0]);
-                                        unset(self::$rankqueue["resistance"][1]);
-                                        if (!isset(self::$match["rank"]["resistance"])) {
-                                            self::$match["rank"]["resistance"] = [];
-                                        }
-                                        self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
-                                        self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
-                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$rankqueue["resistance"][0]);
-                                            unset(self::$rankqueue["resistance"][1]);
-                                            if (!isset(self::$match["rank"]["resistance"])) {
-                                                self::$match["rank"]["resistance"] = [];
-                                            }
-                                            self::$match["rank"]["resistance"][$p1->getName()] = $p2->getName();
-                                            self::$match["rank"]["resistance"][$p2->getName()] = $p1->getName();
-                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-
-                    }
-                }
-                break;
-            case PlayerManager::BOXING_DUEL:
-                if (isset(self::$rankqueue["boxing"][0]) and isset(self::$rankqueue["boxing"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["boxing"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["boxing"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$rankqueue["boxing"][0]);
-                            unset(self::$rankqueue["boxing"][1]);
-                            if (!isset(self::$match["rank"]["boxing"])) {
-                                self::$match["rank"]["boxing"] = [];
-                            }
-                            self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
-                            self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
-                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$rankqueue["boxing"][0]);
-                                unset(self::$rankqueue["boxing"][1]);
-                                if (!isset(self::$match["rank"]["boxing"])) {
-                                    self::$match["rank"]["boxing"] = [];
-                                }
-                                self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
-                                self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
-                                PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                PlayerManager::$playerstatus[$p2->getName()] = $id;
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$rankqueue["boxing"][0]);
-                                    unset(self::$rankqueue["boxing"][1]);
-                                    if (!isset(self::$match["rank"]["boxing"])) {
-                                        self::$match["rank"]["boxing"] = [];
-                                    }
-                                    self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
-                                    self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
-                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$rankqueue["boxing"][0]);
-                                        unset(self::$rankqueue["boxing"][1]);
-                                        if (!isset(self::$match["rank"]["boxing"])) {
-                                            self::$match["rank"]["boxing"] = [];
-                                        }
-                                        self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
-                                        self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
-                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$rankqueue["boxing"][0]);
-                                            unset(self::$rankqueue["boxing"][1]);
-                                            if (!isset(self::$match["rank"]["boxing"])) {
-                                                self::$match["rank"]["boxing"] = [];
-                                            }
-                                            self::$match["rank"]["boxing"][$p1->getName()] = $p2->getName();
-                                            self::$match["rank"]["boxing"][$p2->getName()] = $p1->getName();
-                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-
-                    }
-                }
-                break;
-            case PlayerManager::SUMO_DUEL:
-                if (isset(self::$rankqueue["sumo"][0]) and isset(self::$rankqueue["sumo"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["sumo"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["sumo"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$rankqueue["sumo"][0]);
-                            unset(self::$rankqueue["sumo"][1]);
-                            if (!isset(self::$match["rank"]["sumo"])) {
-                                self::$match["rank"]["sumo"] = [];
-                            }
-                            self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
-                            self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
-                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$rankqueue["sumo"][0]);
-                                unset(self::$rankqueue["sumo"][1]);
-                                if (!isset(self::$match["rank"]["sumo"])) {
-                                    self::$match["rank"]["sumo"] = [];
-                                }
-                                self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
-                                self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
-                                PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                PlayerManager::$playerstatus[$p2->getName()] = $id;
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                    $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$rankqueue["sumo"][0]);
-                                    unset(self::$rankqueue["sumo"][1]);
-                                    if (!isset(self::$match["rank"]["sumo"])) {
-                                        self::$match["rank"]["sumo"] = [];
-                                    }
-                                    self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
-                                    self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
-                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                        $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$rankqueue["sumo"][0]);
-                                        unset(self::$rankqueue["sumo"][1]);
-                                        if (!isset(self::$match["rank"]["sumo"])) {
-                                            self::$match["rank"]["sumo"] = [];
-                                        }
-                                        self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
-                                        self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
-                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                            $p2->teleport(new Vector3(self::$possumo[0],self::$possumo[1], self::$possumo[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$rankqueue["sumo"][0]);
-                                            unset(self::$rankqueue["sumo"][1]);
-                                            if (!isset(self::$match["rank"]["sumo"])) {
-                                                self::$match["rank"]["sumo"] = [];
-                                            }
-                                            self::$match["rank"]["sumo"][$p1->getName()] = $p2->getName();
-                                            self::$match["rank"]["sumo"][$p2->getName()] = $p1->getName();
-                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-
-                    }
-                }
-                break;
-            case PlayerManager::VOIDFIGHT_DUEL:
-                if (isset(self::$rankqueue["voidfight"][0]) and isset(self::$rankqueue["voidfight"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["voidfight"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["voidfight"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        ArenaResetter::reset("voidfight");
-                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
-                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
-                        $p1->teleport(new Vector3(self::$posvoidfight[0],self::$posvoidfight[1], self::$posvoidfight[2]));
-                        $p2->teleport(new Vector3(self::$posvoidfight[0],self::$posvoidfight[1], self::$posvoidfight[2]));
-                    }
-                }
-                break;
-            case PlayerManager::GAPPLE_DUEL:
-                if (isset(self::$rankqueue["gapple"][0]) and isset(self::$rankqueue["gapple"][1])) {
-                    $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue["gapple"][0]);
-                    $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue["gapple"][1]);
-                    if ($p1->isOnline() and $p2->isOnline()) {
-                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getPlayers()) == 0) {
-                            $manager = new KitManager();
-                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel")->getSafeSpawn());
-                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                            $manager->sendDuelKit($p1, $id);
-                            $manager->sendDuelKit($p2, $id);
-                            unset(self::$rankqueue["gapple"][0]);
-                            unset(self::$rankqueue["gapple"][1]);
-                            if (!isset(self::$match["rank"]["gapple"])) {
-                                self::$match["rank"]["gapple"] = [];
-                            }
-                            self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
-                            self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
-                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                        } else {
-                            if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getPlayers()) == 0) {
-                                $manager = new KitManager();
-                                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel2")->getSafeSpawn());
-                                $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                $manager->sendDuelKit($p1, $id);
-                                $manager->sendDuelKit($p2, $id);
-                                unset(self::$rankqueue["gapple"][0]);
-                                unset(self::$rankqueue["gapple"][1]);
-                                if (!isset(self::$match["rank"]["gapple"])) {
-                                    self::$match["rank"]["gapple"] = [];
-                                }
-                                self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
-                                self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
-                                PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                PlayerManager::$playerstatus[$p2->getName()] = $id;
-                            } else {
-                                if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getPlayers()) == 0) {
-                                    $manager = new KitManager();
-                                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel3")->getSafeSpawn());
-                                    $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                    $manager->sendDuelKit($p1, $id);
-                                    $manager->sendDuelKit($p2, $id);
-                                    unset(self::$rankqueue["gapple"][0]);
-                                    unset(self::$rankqueue["gapple"][1]);
-                                    if (!isset(self::$match["rank"]["gapple"])) {
-                                        self::$match["rank"]["gapple"] = [];
-                                    }
-                                    self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
-                                    self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
-                                    PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                    PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                } else {
-                                    if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getPlayers()) == 0) {
-                                        $manager = new KitManager();
-                                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel4")->getSafeSpawn());
-                                        $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                        $manager->sendDuelKit($p1, $id);
-                                        $manager->sendDuelKit($p2, $id);
-                                        unset(self::$rankqueue["gapple"][0]);
-                                        unset(self::$rankqueue["gapple"][1]);
-                                        if (!isset(self::$match["rank"]["gapple"])) {
-                                            self::$match["rank"]["gapple"] = [];
-                                        }
-                                        self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
-                                        self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
-                                        PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                        PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                    } else {
-                                        if (count(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getPlayers()) == 0) {
-                                            $manager = new KitManager();
-                                            $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel5")->getSafeSpawn());
-                                            $p1->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $p2->teleport(new Vector3(self::$posduel[0],self::$posduel[1], self::$posduel[2]));
-                                            $manager->sendDuelKit($p1, $id);
-                                            $manager->sendDuelKit($p2, $id);
-                                            unset(self::$rankqueue["gapple"][0]);
-                                            unset(self::$rankqueue["gapple"][1]);
-                                            if (!isset(self::$match["rank"]["gapple"])) {
-                                                self::$match["rank"]["gapple"] = [];
-                                            }
-                                            self::$match["rank"]["gapple"][$p1->getName()] = $p2->getName();
-                                            self::$match["rank"]["gapple"][$p2->getName()] = $p1->getName();
-                                            PlayerManager::$playerstatus[$p1->getName()] = $id;
-                                            PlayerManager::$playerstatus[$p2->getName()] = $id;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
-                    }
-
-                }
+                self::$match["rank"][$ids[$id]][$p1->getName()] = $p2->getName();
+                self::$match["rank"][$ids[$id]][$p2->getName()] = $p1->getName();
+                ++self::$duelindex;
+                Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+            }
         }
 
     }

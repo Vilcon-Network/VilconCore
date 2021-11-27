@@ -21,7 +21,7 @@ class DatabaseControler extends Database{
             parent::getDatabase()->query("INSERT INTO playerstats VALUES (null, '$playername', 0, 0, 1, 0, 'DEFAULT', 100, 0)");
             parent::getDatabase()->query("INSERT INTO playerkit VALUES (null, '$playername', 'default', 'default', 'default', 'default', 'default')");
             parent::getDatabase()->query("INSERT INTO playersetting VALUES (null, '$playername', 0, 0 , 1)");
-            $default = base64_encode(serialize(["wings" => [], "tags" => [], "sound" => [], "capes" => []]));
+            $default = base64_encode(serialize(["wings" => [], "tags" => [], "sound" => [], "capes" => [], "equip" => ["capes" => "default", "wings" => "default", "tags" => "default", "sound" => "default"]]));
             parent::getDatabase()->query("INSERT INTO playercosmetic VALUES (null , '$playername', '$default')");
             KitManager::$kit["nodebuff"][$player->getName()] = "default";
             KitManager::$kit["combo"][$player->getName()] = "default";

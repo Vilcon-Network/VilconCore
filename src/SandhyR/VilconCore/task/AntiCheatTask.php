@@ -29,10 +29,20 @@ class AntiCheatTask extends Task{
                     $this->susplayer = $p;
                     $this->suscps = $this->listener->getCps($this->susplayer);
                     if (strtoupper($this->plugin->rank[$p->getName()]) == "OWNER" or strtoupper($this->plugin->rank[$p->getName()]) == "ADMIN") {
-                        $p->sendMessage(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $this->susplayer->getName() . "Detected as AutoClicker CPS: " . $this->suscps . " " . TextFormat::GREEN . "(" . $this->susplayer->getNetworkSession()->getPing() . "ms" . ", " . $this->listener->device[$this->susplayer->getName()] . ", " . $this->listener->control[$this->susplayer->getName()] . ")");
-                        Server::getInstance()->getLogger()->info(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $this->susplayer->getName() . "Detected as AutoClicker CPS: " . $this->suscps . " " . TextFormat::GREEN . "(" . $this->susplayer->getNetworkSession()->getPing() . "ms" . ", " . $this->listener->device[$this->susplayer->getName()] . ", " . $this->listener->control[$this->susplayer->getName()] . ")");
+                        $p->sendMessage(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $this->susplayer->getName() . " Detected as AutoClicker CPS: " . $this->suscps . " " . TextFormat::GREEN . "(" . $this->susplayer->getNetworkSession()->getPing() . "ms" . ", " . $this->listener->device[$this->susplayer->getName()] . ", " . $this->listener->control[$this->susplayer->getName()] . ")");
+                        Server::getInstance()->getLogger()->info(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $this->susplayer->getName() . " Detected as AutoClicker CPS: " . $this->suscps . " " . TextFormat::GREEN . "(" . $this->susplayer->getNetworkSession()->getPing() . "ms" . ", " . $this->listener->device[$this->susplayer->getName()] . ", " . $this->listener->control[$this->susplayer->getName()] . ")");
                     }
                 }
+                if ($this->listener->getCps($p) >= 40) {
+                    $this->susplayer = $p;
+                    $this->suscps = $this->listener->getCps($this->susplayer);
+                    if (strtoupper($this->plugin->rank[$p->getName()]) == "OWNER" or strtoupper($this->plugin->rank[$p->getName()]) == "ADMIN") {
+                        $p->sendMessage(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $this->susplayer->getName() . " Kicked by bot with reason AutoClicker CPS: " . $this->suscps . " " . TextFormat::GREEN . "(" . $this->susplayer->getNetworkSession()->getPing() . "ms" . ", " . $this->listener->device[$this->susplayer->getName()] . ", " . $this->listener->control[$this->susplayer->getName()] . ")");
+                        Server::getInstance()->getLogger()->info(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $this->susplayer->getName() . " Kicked by bot with reason AutoClicker CPS: " . $this->suscps . " " . TextFormat::GREEN . "(" . $this->susplayer->getNetworkSession()->getPing() . "ms" . ", " . $this->listener->device[$this->susplayer->getName()] . ", " . $this->listener->control[$this->susplayer->getName()] . ")");
+                        $this->susplayer->kick("AutoClicker is not allowed");
+                    }
+                }
+
             }
         } else {
             $this->getHandler()->cancel();

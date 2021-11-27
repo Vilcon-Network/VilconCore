@@ -4,11 +4,12 @@ namespace SandhyR\VilconCore\anticheat;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerLoginEvent;
 
 class AntiCheatListener implements Listener{
 
 
-    public function onJoin(PlayerJoinEvent $event){
+    public function onLogin(PlayerLoginEvent $event){
         $player = $event->getPlayer();
         $extradata = $player->getPlayerInfo()->getExtraData();
         $os = (int)$extradata["DeviceOS"];

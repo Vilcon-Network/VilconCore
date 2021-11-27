@@ -2,6 +2,7 @@
 
 namespace SandhyR\VilconCore;
 
+use pocketmine\entity\Skin;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -11,6 +12,7 @@ use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -19,11 +21,13 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\item\SplashPotion;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
+use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
@@ -31,6 +35,7 @@ use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\arena\KitManager;
 use SandhyR\VilconCore\database\Database;
 use SandhyR\VilconCore\database\DatabaseControler;
+use SandhyR\VilconCore\task\AFKTask;
 use SandhyR\VilconCore\task\KronTask;
 use SandhyR\VilconCore\task\NametagTask;
 use pocketmine\network\mcpe\protocol\EmotePacket;
@@ -52,6 +57,7 @@ class EventListener implements Listener
     public static $autogg = [];
     public static $autoez = [];
     public static $cpspopup = [];
+    public static $movementsession = [];
 
     public function __construct(Main $plugin)
     {
@@ -78,9 +84,9 @@ class EventListener implements Listener
         if (count(Server::getInstance()->getOnlinePlayers()) - 1 == 0) {
             Main::getInstance()->antiCheatTask($this);
         }
-        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new NametagTask($event->getPlayer(), $this), 1);
         PlayerManager::$playerstatus[$event->getPlayer()->getName()] = PlayerManager::LOBBY;
         Main::getInstance()->getScheduler()->scheduleRepeatingTask(new ScoreboardTask($event->getPlayer()), 20);
+        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new AFKTask($event->getPlayer()), 20);
     }
 
     public function onAttack(EntityDamageByEntityEvent $event)
@@ -118,7 +124,7 @@ class EventListener implements Listener
                         $this->setTimer($player, $killer);
                     }
                 }
-                if ($event->getBaseDamage() >= $player->getHealth() - 1.0) {
+                if ($player->getHealth() <= $event->getFinalDamage()) {
                     if (!Arena::isMatch($player) and !Arena::isMatch($killer)) {
                         self::teleportLobby($player);
                         $worldname = $killer->getWorld()->getFolderName();
@@ -140,13 +146,15 @@ class EventListener implements Listener
                         } else {
                             $dm = $player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $finalhealth . " HP]";
                         }
+                        Server::getInstance()->broadcastMessage($dm);
                         $manager->sendKit($player, PlayerManager::$playerstatus[$player->getName()]);
                     } else {
                             self::teleportLobby($player);
-                            $killer->sendTitle(TextFormat::YELLOW . "VICTORY");
+                            $killer->sendTitle(TextFormat::GOLD . "VICTORY");
                             $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
                             $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
                             self::teleportLobby($killer);
+                            --Arena::$duelindex;
                             Arena::unsetMatch($player);
                             Arena::unsetMatch($killer);
                             var_dump(Arena::$match);
@@ -157,7 +165,6 @@ class EventListener implements Listener
                     if (self::$autogg[$killer->getName()] == 1) {
                         $killer->chat("gg");
                     }
-                    Server::getInstance()->broadcastMessage($dm);
                     ++DatabaseControler::$kill[$killer->getName()];
                     ++DatabaseControler::$death[$player->getName()];
                     LevelManager::addExp($killer, mt_rand(20, 50));
@@ -167,11 +174,14 @@ class EventListener implements Listener
             }
             $player->setHealth($player->getHealth());
             $killer->setHealth($killer->getHealth());
+            var_dump($event->getFinalDamage());
+            var_dump($player->getHealth());
         }
     }
 
     public static function sendItem(Player $player)
     {
+        $player->setGamemode(GameMode::ADVENTURE());
         $player->getInventory()->clearAll();
         $player->getArmorInventory()->clearAll();
         $item = new ItemFactory();
@@ -179,7 +189,7 @@ class EventListener implements Listener
         $player->getInventory()->setItem(1, $item->get(ItemIds::IRON_SWORD)->setCustomName("Duels"));
         $player->getInventory()->setItem(2, $item->get(ItemIds::GOLD_SWORD)->setCustomName("Self Practice"));
         $player->getInventory()->setItem(4, $item->get(ItemIds::COMPASS)->setCustomName("Cosmetic Shop"));
-        $player->getInventory()->setItem(5, $item->get(ItemIds::MOB_HEAD)->setCustomName("Cosmetic"));
+        $player->getInventory()->setItem(5, $item->get(ItemIds::RED_FLOWER)->setCustomName("Cosmetic"));
     }
 
     public function onInteract(PlayerInteractEvent $event)
@@ -247,7 +257,7 @@ class EventListener implements Listener
                     }
                 }
                 break;
-            case ItemIds::MOB_HEAD:
+            case ItemIds::RED_FLOWER:
                 if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
                     if (!isset($this->delay[$player->getName()])) {
                         $form = new FormManager();
@@ -403,6 +413,7 @@ class EventListener implements Listener
     public function onMove(PlayerMoveEvent $event)
     {
         $player = $event->getPlayer();
+        self::$movementsession[$player->getName()] = 120;
         if ($player->getPosition()->asVector3()->getY() <= 2) {
             if ($player->getWorld()->getFolderName() == "sumo") {
                 if (isset($this->damager[$player->getName()])) {
@@ -445,12 +456,31 @@ class EventListener implements Listener
         $extradata = $player->getNetworkSession()->getPlayerInfo()->getExtraData();
         $os = ["Unknown", "Android", "iOS", "macOS", "FireOS", "GearVR", "HoloLens", "Win10", "Windows", "Dedicated", "Orbis", "PS4", "Nintendo Switch", "Xbox One"];
         $control = ["Unknown", "Mouse", "Touch", "Controller"];
+        $cosmetic = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+        foreach ($cosmetic["equip"] as $key => $value) {
+            if ($value !== "default") {
+                switch ($key) {
+                    case "capes":
+                        $oldSkin = $player->getSkin();
+                        $skinmanager = new SkinManager();
+                        $capeData = $skinmanager->createCape($value);
+                        $setCape = new Skin($oldSkin->getSkinId(), $oldSkin->getSkinData(), $capeData, $oldSkin->getGeometryName(), $oldSkin->getGeometryData());
+                        $player->setSkin($setCape);
+                        $player->sendSkin();
+                        break;
+                    case "wings":
+                        // yes
+                        break;
+                }
+            }
+        }
         try {
             $this->control[$player->getName()] = $control[$extradata["CurrentInputMode"]];
         } catch (\ErrorException $exception) {
 
         }
         $this->device[$player->getName()] = $os[$extradata["DeviceOS"]];
+        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new NametagTask($player, $this), 1);
         $data = $player->getPlayerInfo()->getExtraData();
         $name = $data["ThirdPartyName"];
         if ($data["PersonaSkin"]) {
@@ -500,7 +530,7 @@ class EventListener implements Listener
                 } else {
                     if (!$event->isCancelled()) {
                         $event->cancel();
-                        $player->sendMessage("Please wait " . $this->chatdelay[$player->getName()] + 3 - time() . " Second");
+                        $player->sendMessage("Please wait 3 Second to chat");
                     }
                 }
             } else {
@@ -513,7 +543,7 @@ class EventListener implements Listener
                 } else {
                     if (!$event->isCancelled()) {
                         $event->cancel();
-                        $player->sendMessage("Please wait " . $this->chatdelay[$player->getName()] + 1 - time() . " Second");
+                        $player->sendMessage("Please wait 1 Second to chat");
                     }
                 }
             } else {
@@ -598,5 +628,9 @@ class EventListener implements Listener
                 $entity->setAllowFlight(false);
             }
         }
+    }
+
+    public function onDrop(PlayerDropItemEvent $event){
+        $event->cancel();
     }
 }

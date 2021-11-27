@@ -14,7 +14,7 @@ use SandhyR\VilconCore\database\DatabaseControler;
 
 class FormManager{
 
-    private $price = ["Blue Creeper"=> 250000, "Enderman"=> 100000, "Energy" => 30000, "Fire" => 40000, "Red Creeper" => 50000, "Turtle" => 75000, "Pickaxe" => 60000, "Firework" => 70000, "Iron Golem" => 50000];
+    private $price = ["cape" => ["Blue Creeper"=> 250000, "Enderman"=> 100000, "Energy" => 30000, "Fire" => 40000, "Red Creeper" => 50000, "Turtle" => 75000, "Pickaxe" => 60000, "Firework" => 70000, "Iron Golem" => 50000], "tags" => []];
 
     public function ffaForm(Player $player){
         $api =Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
@@ -238,23 +238,23 @@ class FormManager{
                 $player->sendMessage("The choosen cape is not available!");
             }else{
                 if (strtoupper(Main::getInstance()->rank[$player->getName()]) == "DEFAULT") {
-                    $player->sendMessage("You must vip or higher to buy this cape");
+                    $player->sendMessage(TextFormat::RED . "You must have " .TextFormat::GREEN . "VIP" . TextFormat::RED ." or higher to buy this cape");
                 } else {
                     var_dump(DatabaseControler::$coins);
-                    if(DatabaseControler::$coins[$player->getName()] >= $this->price[$cape]){
+                    if(DatabaseControler::$coins[$player->getName()] >= $this->price["cape"][$cape]){
                         $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
                         if(!in_array($cape, $array["capes"])) {
-                            $player->sendMessage("You succesfully buy cape");
+                            $player->sendMessage(TextFormat::GREEN . "You purchased " . $cape . " for " . number_format($this->price["cape"][$cape]) . " coins");
                             $array["capes"][] = $cape;
                             $final = base64_encode(serialize($array));
                             DatabaseControler::$cosmetic[$player->getName()] = $final;
                             var_dump(unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()])));
-                            DatabaseControler::$coins[$player->getName()] -= $this->price[$cape];
+                            DatabaseControler::$coins[$player->getName()] -= $this->price["cape"][$cape];
                         } else {
-                            $player->sendMessage("You already have this cape");
+                            $player->sendMessage(TextFormat::RED . "You already have " . $cape);
                         }
                     } else {
-                        $player->sendMessage("Your money not enough");
+                        $player->sendMessage(TextFormat::RED . "You dont have enough coins to buy " . $cape);
                     }
                 }
             }
@@ -264,29 +264,9 @@ class FormManager{
         $form->setContent("Choose your cape");
         $skinmanager = new SkinManager();
         foreach($skinmanager->getCapes() as $capes){
-            $form->addButton("$capes" . "\n" . "Price: ". $this->price[$capes] , -1, "", $capes);
+            $form->addButton("$capes" . "\n" . number_format($this->price["cape"][$capes]) . " Coins", -1, "", $capes);
         }
         $form->sendToPlayer($player);
-    }
-
-    public function createCape($capeName){
-
-        $path = Main::getInstance()->getDataFolder() . "{$capeName}.png";
-        $img = @imagecreatefrompng($path);
-        $bytes = '';
-        $l = (int)@getimagesize($path)[1];
-        for ($y = 0; $y < $l; $y++) {
-            for ($x = 0; $x < 64; $x++) {
-                $rgba = @imagecolorat($img, $x, $y);
-                $a = ((~((int)($rgba >> 24))) << 1) & 0xff;
-                $r = ($rgba >> 16) & 0xff;
-                $g = ($rgba >> 8) & 0xff;
-                $b = $rgba & 0xff;
-                $bytes .= chr($r) . chr($g) . chr($b) . chr($a);
-            }
-        }
-        @imagedestroy($img);
-        return $bytes;
     }
 
     public function usecosmeticform(Player $player){
@@ -321,10 +301,15 @@ class FormManager{
                 return true;
             }
             $oldSkin = $player->getSkin();
-            $capeData = $this->createCape($data);
+            $skinmanager = new SkinManager();
+            $capeData = $skinmanager->createCape($data);
             $setCape = new Skin($oldSkin->getSkinId(), $oldSkin->getSkinData(), $capeData, $oldSkin->getGeometryName(), $oldSkin->getGeometryData());
             $player->setSkin($setCape);
             $player->sendSkin();
+            $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+            $array["equip"]["capes"] = $data;
+            $array = base64_encode(serialize($array));
+            DatabaseControler::$cosmetic[$player->getName()] = $array;
             return false;
         });
         $form->setTitle(TextFormat::RED . "Cosmetic");
