@@ -145,8 +145,8 @@ class FormManager{
         $form->addButton("Fist" . "\n" . "Queue: " . count(Arena::$rankqueue["fist"]) ?? 0, 0, "textures/items/beef_cooked");
 //        $form->addButton("Combo" . "\n" . "Queue: " . count(Arena::$rankqueue["gapple"]) ?? 0, 0, "textures/items/fish_pufferfish_raw");
         $form->addButton("Sumo" . "\n" . "Queue: " . count(Arena::$rankqueue["sumo"]) ?? 0, 0,"textures/items/feather");
-        $form->addButton("Gapple" . "\n" . "Queue:" . count(Arena::$rankqueue["gapple"]) ??  0, 0, "textures/items/apple_golden");
-        $form->addButton("Voidfight" . "\n" . "Queue:" . count(Arena::$rankqueue["voidfight"]) ??  0, 0, "textures/items/bed_red");
+        $form->addButton("Gapple" . "\n" . "Queue: " . count(Arena::$rankqueue["gapple"]) ??  0, 0, "textures/items/apple_golden");
+        $form->addButton("Voidfight" . "\n" . "Queue: " . count(Arena::$rankqueue["voidfight"]) ??  0, 0, "textures/items/bed_red");
         $form->sendToPlayer($player);
         return $form;
     }
@@ -191,8 +191,8 @@ class FormManager{
         $form->addButton("Fist" . "\n" . "Queue: " . count(Arena::$unrankqueue["fist"]) ?? 0, 0, "textures/items/beef_cooked");
 //        $form->addButton("Combo" . "\n" . "Queue: " . count(Arena::$unrankqueue["gapple"]) ?? 0, 0, "textures/items/fish_pufferfish_raw");
         $form->addButton("Sumo" . "\n" . "Queue: " . count(Arena::$unrankqueue["sumo"]) ?? 0, 0,"textures/items/feather");
-        $form->addButton("Gapple" . "\n" . "Queue:" . count(Arena::$unrankqueue["gapple"]) ??  0, 0, "textures/items/apple_golden");
-        $form->addButton("Voidfight" . "\n" . "Queue:" . count(Arena::$unrankqueue["voidfight"]) ??  0, 0, "textures/items/bed_red");
+        $form->addButton("Gapple" . "\n" . "Queue: " . count(Arena::$unrankqueue["gapple"]) ??  0, 0, "textures/items/apple_golden");
+        $form->addButton("Voidfight" . "\n" . "Queue: " . count(Arena::$unrankqueue["voidfight"]) ??  0, 0, "textures/items/bed_red");
         $form->sendToPlayer($player);
         return $form;
     }
