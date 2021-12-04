@@ -18,6 +18,8 @@ use SandhyR\VilconCore\arena\KitManager;
 
 class Main extends PluginBase{
 
+
+    /** @var Main $instance */
     public static $instance;
     public $config;
     public $rank = [];
@@ -83,7 +85,8 @@ class Main extends PluginBase{
         KitManager::$kit["blockin"] = []; 
     }
 
-    public static function getInstance(){
+    /** @return Main */
+    public static function getInstance(): Main{
         return self::$instance;
     }
 

@@ -14,7 +14,8 @@ use SandhyR\VilconCore\database\DatabaseControler;
 
 class FormManager{
 
-    private $price = ["cape" => ["Blue Creeper"=> 250000, "Enderman"=> 100000, "Energy" => 30000, "Fire" => 40000, "Red Creeper" => 50000, "Turtle" => 75000, "Pickaxe" => 60000, "Firework" => 70000, "Iron Golem" => 50000], "tags" => []];
+    private $price = ["cape" => ["Blue Creeper"=> 250000, "Enderman"=> 100000, "Energy" => 30000, "Fire" => 40000, "Red Creeper" => 50000, "Turtle" => 75000, "Pickaxe" => 60000, "Firework" => 70000, "Iron Golem" => 50000], "tags" => [TextFormat::YELLOW . "Krontol" => 1,TextFormat::BLUE . "Vestri"=> 2, TextFormat::DARK_PURPLE . "Neferhir" => 3]];
+    private $tagslist = [TextFormat::YELLOW . "Krontol", TextFormat::BLUE . "Vestri", TextFormat::DARK_PURPLE . "Neferhir"];
 
     public function ffaForm(Player $player){
         $api =Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
@@ -282,11 +283,15 @@ class FormManager{
                 case 0:
                     $this->usecapeform($player);
                     break;
+                case 1:
+                    $this->usetagsform($player);
+                    break;
             }
             return false;
         });
         $form->setTitle(TextFormat::RED . "Cosmetic");
         $form->addButton("Cape");
+        $form->addButton("Tags");
         $player->sendForm($form);
         return $form;
     }
@@ -300,22 +305,96 @@ class FormManager{
             if ($result === null) {
                 return true;
             }
-            $oldSkin = $player->getSkin();
-            $skinmanager = new SkinManager();
-            $capeData = $skinmanager->createCape($data);
-            $setCape = new Skin($oldSkin->getSkinId(), $oldSkin->getSkinData(), $capeData, $oldSkin->getGeometryName(), $oldSkin->getGeometryData());
-            $player->setSkin($setCape);
-            $player->sendSkin();
-            $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
-            $array["equip"]["capes"] = $data;
-            $array = base64_encode(serialize($array));
-            DatabaseControler::$cosmetic[$player->getName()] = $array;
+            if($result == "None") {
+                $oldSkin = $player->getSkin();
+                $setCape = new Skin($oldSkin->getSkinId(), $oldSkin->getSkinData(), "", $oldSkin->getGeometryName(), $oldSkin->getGeometryData());
+                $player->setSkin($setCape);
+                $player->sendSkin();
+                $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+                $array["equip"]["capes"] = "default";
+                $array = base64_encode(serialize($array));
+                DatabaseControler::$cosmetic[$player->getName()] = $array;
+            } else {
+                $oldSkin = $player->getSkin();
+                $skinmanager = new SkinManager();
+                $capeData = $skinmanager->createCape($data);
+                $setCape = new Skin($oldSkin->getSkinId(), $oldSkin->getSkinData(), $capeData, $oldSkin->getGeometryName(), $oldSkin->getGeometryData());
+                $player->setSkin($setCape);
+                $player->sendSkin();
+                $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+                $array["equip"]["capes"] = $data;
+                $array = base64_encode(serialize($array));
+                DatabaseControler::$cosmetic[$player->getName()] = $array;
+            }
             return false;
         });
         $form->setTitle(TextFormat::RED . "Cosmetic");
         $cape = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
         foreach ($cape["capes"] as $capes){
             $form->addButton("$capes", -1,"", $capes);
+        }
+        $player->sendForm($form);
+        return $form;
+    }
+
+    public function tagsshop(Player $player){
+        $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
+        if ($api === null) {
+        }
+        $form = $api->createSimpleForm(function (Player $player, $data) {
+            $result = $data;
+            if ($result === null) {
+                return true;
+            }
+            if(DatabaseControler::$coins[$player->getName()] >= $this->price["tags"][$data]) {
+                $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+                if (!in_array($data, $array["tags"])) {
+                    $array["tags"][] = $data;
+                    $array = base64_encode(serialize($array));
+                    DatabaseControler::$cosmetic[$player->getName()] = $array;
+                    DatabaseControler::$coins[$player->getName()] -= $this->price["tags"][$data];
+                    $player->sendMessage(TextFormat::GREEN . "You purchased " . $data . " for " . number_format($this->price["tags"][$data]) . " coins");
+                } else {
+                    $player->sendMessage(TextFormat::RED . "You already have " . $data);
+                }
+            } else {
+                $player->sendMessage(TextFormat::RED . "You dont have enough coins to buy " . $data);
+            }
+            return false;
+        });
+        $form->setTitle(TextFormat::RED . "Cosmetic");
+        foreach ($this->tagslist as $tags){
+            $form->addButton("$tags", -1,"", $tags);
+        }
+        $player->sendForm($form);
+        return $form;
+    }
+
+    public function usetagsform(Player $player){
+        $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
+        if ($api === null) {
+        }
+        $form = $api->createSimpleForm(function (Player $player, $data) {
+            $result = $data;
+            if ($result === null) {
+                return true;
+            }
+            $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+            if($data == "None"){
+                $array["equip"]["tags"] = "default";
+                $array = base64_encode(serialize($array));
+                DatabaseControler::$cosmetic[$player->getName()] = $array;
+            } else {
+                $array["equip"]["tags"] = $data;
+                $array = base64_encode(serialize($array));
+                DatabaseControler::$cosmetic[$player->getName()] = $array;
+            }
+            return false;
+        });
+        $form->setTitle(TextFormat::RED . "Cosmetic");
+        $tags = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+        foreach ($tags["tags"] as $tag){
+            $form->addButton("$tag", -1,"", $tag);
         }
         $player->sendForm($form);
         return $form;

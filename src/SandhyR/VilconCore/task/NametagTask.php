@@ -8,11 +8,13 @@ use pocketmine\utils\TextFormat;
 use SandhyR\VilconCore\database\DatabaseControler;
 use SandhyR\VilconCore\EventListener;
 use SandhyR\VilconCore\Main;
+use SandhyR\VilconCore\RankManager;
 
 class NametagTask extends Task{
 
     private Player $player;
     private EventListener $listener;
+    private $index = 0;
 
         public function __construct(Player $player, EventListener $listener){
         $this->player = $player;
@@ -35,7 +37,11 @@ class NametagTask extends Task{
                         }
                     } else {
                         if (!isset($this->listener->damager[$player->getName()])) {
-                            $player->setNameTag($cosmetic["equip"]["tags"] . "\n " . $player->getName() . "\n" . TextFormat::GRAY . $this->listener->device[$player->getName()] . " - " . $this->listener->control[$player->getName()]);
+                            $player->setNameTag($cosmetic["equip"]["tags"] . "\n " . /*substr(RankManager::getRankFormat(Main::getInstance()->rank[$player->getName()]), $this->index) . */ $player->getName() . "\n" . TextFormat::GRAY . $this->listener->device[$player->getName()] . " - " . $this->listener->control[$player->getName()]);
+//                            ++$this->index;
+//                            if($this->index > strlen(RankManager::getRankFormat(Main::getInstance()->rank[$player->getName()]))){
+//                                $this->index = 0;
+//                            }
                         } else {
                             $player->setNameTag($cosmetic["equip"]["tags"] . "\n" . $player->getName() . " " . "[" . TextFormat::AQUA . round($player->getHealth(), 2) . TextFormat::WHITE . "]" . "\n" . TextFormat::AQUA . "CPS: " . TextFormat::RESET . $this->listener->getCps($player) . " " . TextFormat::AQUA . "PING: " . TextFormat::RESET . $player->getNetworkSession()->getPing() . "ms");
                         }

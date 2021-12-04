@@ -76,7 +76,6 @@ class EventListener implements Listener
         }
         $player->getInventory()->clearAll();
         self::sendItem($player);
-        $this->clicks[$event->getPlayer()->getName()] = [];
 //        $this->initJoin($player);
         if($this->plugin->rank[$player->getName()] !== "DEFAULT"){
             $player->setAllowFlight(true);
@@ -172,10 +171,6 @@ class EventListener implements Listener
                     Utils::addSound($killer);
                 }
             }
-            $player->setHealth($player->getHealth());
-            $killer->setHealth($killer->getHealth());
-            var_dump($event->getFinalDamage());
-            var_dump($player->getHealth());
         }
     }
 
@@ -457,6 +452,7 @@ class EventListener implements Listener
         $os = ["Unknown", "Android", "iOS", "macOS", "FireOS", "GearVR", "HoloLens", "Win10", "Windows", "Dedicated", "Orbis", "PS4", "Nintendo Switch", "Xbox One"];
         $control = ["Unknown", "Mouse", "Touch", "Controller"];
         $cosmetic = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
+        $this->clicks[$player->getName()] = [];
         foreach ($cosmetic["equip"] as $key => $value) {
             if ($value !== "default") {
                 switch ($key) {
@@ -517,7 +513,7 @@ class EventListener implements Listener
         if (isset($this->lastchat[$player->getName()])) {
             if ($event->getMessage() == $this->lastchat[$player->getName()]) {
                 $event->cancel();
-                $player->sendMessage("Spam is not allowed");
+                $player->sendMessage(TextFormat::RED . "You cant send message at twice");
             }
             $this->lastchat[$player->getName()] = $event->getMessage();
         } else {
@@ -530,7 +526,7 @@ class EventListener implements Listener
                 } else {
                     if (!$event->isCancelled()) {
                         $event->cancel();
-                        $player->sendMessage("Please wait 3 Second to chat");
+                        $player->sendMessage(TextFormat::RED . "Please wait 3 Second to chat");
                     }
                 }
             } else {
@@ -543,7 +539,7 @@ class EventListener implements Listener
                 } else {
                     if (!$event->isCancelled()) {
                         $event->cancel();
-                        $player->sendMessage("Please wait 1 Second to chat");
+                        $player->sendMessage(TextFormat::RED . "Please wait 1 Second to chat");
                     }
                 }
             } else {
