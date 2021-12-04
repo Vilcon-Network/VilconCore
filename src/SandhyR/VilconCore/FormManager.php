@@ -241,7 +241,6 @@ class FormManager{
                 if (strtoupper(Main::getInstance()->rank[$player->getName()]) == "DEFAULT") {
                     $player->sendMessage(TextFormat::RED . "You must have " .TextFormat::GREEN . "VIP" . TextFormat::RED ." or higher to buy this cape");
                 } else {
-                    var_dump(DatabaseControler::$coins);
                     if(DatabaseControler::$coins[$player->getName()] >= $this->price["cape"][$cape]){
                         $array = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
                         if(!in_array($cape, $array["capes"])) {
@@ -249,7 +248,6 @@ class FormManager{
                             $array["capes"][] = $cape;
                             $final = base64_encode(serialize($array));
                             DatabaseControler::$cosmetic[$player->getName()] = $final;
-                            var_dump(unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()])));
                             DatabaseControler::$coins[$player->getName()] -= $this->price["cape"][$cape];
                         } else {
                             $player->sendMessage(TextFormat::RED . "You already have " . $cape);

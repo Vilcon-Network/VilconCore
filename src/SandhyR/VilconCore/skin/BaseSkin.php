@@ -38,8 +38,6 @@ class BaseSkin{
 
             imagesavealpha($this->skin, true);
             imagepng($this->skin, $path);
-            var_dump($this->skin);
-            var_dump($path);
             $this->lastModified = time();
         } else {
             $this->skin = @imagecreatefrompng($path);

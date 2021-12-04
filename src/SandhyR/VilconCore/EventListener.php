@@ -156,7 +156,6 @@ class EventListener implements Listener
                             --Arena::$duelindex;
                             Arena::unsetMatch($player);
                             Arena::unsetMatch($killer);
-                            var_dump(Arena::$match);
                     }
                     if (self::$autoez[$killer->getName()] == 1) {
                         $killer->chat("ez");

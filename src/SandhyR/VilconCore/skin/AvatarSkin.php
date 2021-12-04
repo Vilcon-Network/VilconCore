@@ -22,6 +22,5 @@ class AvatarSkin extends BaseSkin{
         // face gear
         if($this->checkHatTransparency())
             imagecopyresampled($this->image, $this->skin, 0, 0, 40, 8, $size, $size, 8, 8);
-        var_dump("a");
     }
 }
