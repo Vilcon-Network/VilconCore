@@ -17,12 +17,11 @@ class ArenaResetter{
         if(!isset(self::$index["voidfight"])){
             self::$index["voidfight"] = 0;
         }
-       Server::getInstance()->getWorldManager()->loadWorld(Main::getInstance()->getLobby());
-        Server::getInstance()->getWorldManager()->unloadWorld(Server::getInstance()->getWorldManager()->getWorldByName($name));
-        $path = Server::getInstance()->getDataPath();
-        self::recurse_copy($path."worldsbackup/$name",$path."worlds/$name");
-        Server::getInstance()->getWorldManager()->loadWorld("$name");
         ++self::$index["voidfight"];
+       Server::getInstance()->getWorldManager()->loadWorld(Main::getInstance()->getLobby());
+        $path = Server::getInstance()->getDataPath();
+        self::recurse_copy($path."worldsbackup/$name" . self::$index["voidfight"],$path."worlds/$name" . self::$index["voidfight"]);
+        Server::getInstance()->getWorldManager()->loadWorld("$name". self::$index["voidfight"]);
     }
 
     public static function recurse_copy($src,$dst) {

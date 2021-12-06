@@ -11,6 +11,7 @@ use SandhyR\VilconCore\anticheat\AntiCheatListener;
 use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\arena\ArenaResetter;
 use SandhyR\VilconCore\command\SetRankCommand;
+use SandhyR\VilconCore\database\Database;
 use SandhyR\VilconCore\database\DatabaseControler;
 use SandhyR\VilconCore\task\AntiCheatTask;
 use SandhyR\VilconCore\task\CombatTask;
@@ -36,6 +37,7 @@ class Main extends PluginBase{
         $this->checkRequirement();
         @mkdir(Server::getInstance()->getDataPath() . "worldsbackup");
         $this->saveDefaultConfig();
+        $this->getScheduler()->scheduleRepeatingTask(new AntiCheatTask($this), 20);
         $capes = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         if(is_array($capes->get("standard_capes"))) {
             foreach ($capes->get("standard_capes") as $cape) {
@@ -107,15 +109,31 @@ class Main extends PluginBase{
         $this->getScheduler()->scheduleRepeatingTask(new CombatTask($player, $player2, $listener), 20);
     }
 
-    public function antiCheatTask(EventListener $listener){
-        $this->getScheduler()->scheduleRepeatingTask(new AntiCheatTask($listener, $this), 1);
-    }
-
     public function onDisable(): void
     {
+        foreach (Server::getInstance()->getOnlinePlayers() as $player){
+            $playername = $player->getName();
+                $nodebuffkit = KitManager::$kit["nodebuff"][$player->getName()];
+            $combokit = KitManager::$kit["combo"][$player->getName()];
+            $builduhc = KitManager::$kit["builduhc"][$player->getName()];
+            $voidfight = KitManager::$kit["voidfight"][$player->getName()];
+            $blockin = KitManager::$kit["blockin"][$player->getName()];
+            Database::getDatabase()->query("UPDATE playerkit SET nodebuffkit='$nodebuffkit' WHERE username='$playername'");
+            Database::getDatabase()->query("UPDATE playerkit SET combokit='$combokit' WHERE username='$playername'");
+            Database::getDatabase()->query("UPDATE playerkit SET builduhckit='$builduhc' WHERE username='$playername'");
+            Database::getDatabase()->query("UPDATE playerkit SET voidfightkit='$voidfight' WHERE username='$playername'");
+            Database::getDatabase()->query("UPDATE playerkit SET blockinkit='$blockin' WHERE username='$playername'");
+            DatabaseControler::setKill($player, DatabaseControler::$kill[$player->getName()]);
+            DatabaseControler::setDeath($player, DatabaseControler::$death[$player->getName()]);
+            DatabaseControler::setElo($player, DatabaseControler::$elo[$player->getName()]);
+            DatabaseControler::setCoin($player, DatabaseControler::$coins[$player->getName()]);
+            DatabaseControler::setCosmetic($player, DatabaseControler::$cosmetic[$player->getName()]);
+            }
         try {
-            ArenaResetter::removeWorld("voidfight");
-        } catch (\UnexpectedValueException $exception){
+            foreach (range(0, ArenaResetter::$index["voidfight"]) as $item){
+                ArenaResetter::removeWorld("voidfight" . $item);
+            }
+        } catch (\UnexpectedValueException|\ErrorException $exception){
         }
     }
 

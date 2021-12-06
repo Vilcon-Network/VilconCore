@@ -7,6 +7,7 @@ use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\player\Player;
 use pocketmine\Server;
+use pocketmine\world\World;
 use SandhyR\VilconCore\PlayerManager;
 use pocketmine\math\Vector3;
 use SandhyR\VilconCore\task\DuelTask;
@@ -19,7 +20,7 @@ class Arena
     public static $unrankqueue = [];
     public static $rankqueue = [];
     public static $duelkit = [];
-    public static $posduel = [2455, 542, 2432];
+    public static $posduel = [[1232131, 311231, 132113], [1312313, 1321313,1312313]];
     private static $possumo = [2134,24324,24342];
     private static $posvoidfight = [1231,1313,14142];
     public static $duelTimer = [];
@@ -684,22 +685,38 @@ class Arena
             $p1 = Server::getInstance()->getPlayerExact(self::$unrankqueue[$ids[$id]][$index[0]]);
             $p2 = Server::getInstance()->getPlayerExact(self::$unrankqueue[$ids[$id]][$index[1]]);
             if ($p1->isOnline() and $p2->isOnline()) {
-                Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
-                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
-                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
-                $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                $manager->sendDuelKit($p1, $id);
-                $manager->sendDuelKit($p2, $id);
-                unset(self::$unrankqueue[$ids[$id]][$index[0]]);
-                unset(self::$unrankqueue[$ids[$id]][$index[1]]);
-                if (!isset(self::$match["unrank"][$ids[$id]])) {
-                    self::$match["unrank"][$ids[$id]] = [];
+                if ($id == PlayerManager::VOIDFIGHT_DUEL) {
+                    ArenaResetter::reset("voidfight");
+                    Server::getInstance()->getWorldManager()->loadWorld("voidfight" . ArenaResetter::$index["voidfight"]);
+                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+                    $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
+                    $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
+                    $manager->sendDuelKit($p1, $id);
+                    $manager->sendDuelKit($p2, $id);
+                    unset(self::$unrankqueue[$ids[$id]][$index[0]]);
+                    unset(self::$unrankqueue[$ids[$id]][$index[1]]);
+                    if (!isset(self::$match["unrank"][$ids[$id]])) {
+                        self::$match["unrank"][$ids[$id]] = [];
+                    }
+                } else {
+                    Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
+                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                    $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
+                    $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
+                    $manager->sendDuelKit($p1, $id);
+                    $manager->sendDuelKit($p2, $id);
+                    unset(self::$unrankqueue[$ids[$id]][$index[0]]);
+                    unset(self::$unrankqueue[$ids[$id]][$index[1]]);
+                    if (!isset(self::$match["unrank"][$ids[$id]])) {
+                        self::$match["unrank"][$ids[$id]] = [];
+                    }
                 }
-                self::$match["unrank"][$ids[$id]][$p1->getName()] = $p2->getName();
-                self::$match["unrank"][$ids[$id]][$p2->getName()] = $p1->getName();
-                ++self::$duelindex;
-                Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
+                    self::$match["unrank"][$ids[$id]][$p1->getName()] = $p2->getName();
+                    self::$match["unrank"][$ids[$id]][$p2->getName()] = $p1->getName();
+                    ++self::$duelindex;
+                    Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
             }
         }
     }
@@ -1354,17 +1371,32 @@ class Arena
             $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[0]]);
             $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[1]]);
             if ($p1->isOnline() and $p2->isOnline()) {
-                Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
-                $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
-                $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
-                $p1->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                $p2->teleport(new Vector3(self::$posduel[0], self::$posduel[1], self::$posduel[2]));
-                $manager->sendDuelKit($p1, $id);
-                $manager->sendDuelKit($p2, $id);
-                unset(self::$rankqueue[$ids[$id]][$index[0]]);
-                unset(self::$rankqueue[$ids[$id]][$index[1]]);
-                if (!isset(self::$match["rank"][$ids[$id]])) {
-                    self::$match["rank"][$ids[$id]] = [];
+                if ($id == PlayerManager::VOIDFIGHT_DUEL) {
+                    ArenaResetter::reset("voidfight");
+                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+                    $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
+                    $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
+                    $manager->sendDuelKit($p1, $id);
+                    $manager->sendDuelKit($p2, $id);
+                    unset(self::$rankqueue[$ids[$id]][$index[0]]);
+                    unset(self::$rankqueue[$ids[$id]][$index[1]]);
+                    if (!isset(self::$match["rank"][$ids[$id]])) {
+                        self::$match["rank"][$ids[$id]] = [];
+                    }
+                } else {
+                    Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
+                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                    $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
+                    $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
+                    $manager->sendDuelKit($p1, $id);
+                    $manager->sendDuelKit($p2, $id);
+                    unset(self::$rankqueue[$ids[$id]][$index[0]]);
+                    unset(self::$rankqueue[$ids[$id]][$index[1]]);
+                    if (!isset(self::$match["rank"][$ids[$id]])) {
+                        self::$match["rank"][$ids[$id]] = [];
+                    }
                 }
                 self::$match["rank"][$ids[$id]][$p1->getName()] = $p2->getName();
                 self::$match["rank"][$ids[$id]][$p2->getName()] = $p1->getName();

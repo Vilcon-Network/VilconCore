@@ -8,13 +8,14 @@ use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\database\DatabaseControler;
-use SandhyR\VilconCore\Main;
 use SandhyR\VilconCore\PlayerManager;
 use Scoreboards\Scoreboards;
 
 class ScoreboardTask  extends Task{
 
-    private $player;
+
+    /** @var Player */
+    private Player $player;
 
     public function __construct(Player $player)
     {

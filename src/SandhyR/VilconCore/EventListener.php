@@ -48,9 +48,9 @@ class EventListener implements Listener
     public $damager = [];
     public $timer = [];
     private $delay = [];
-    private $clicks = [];
-    public $device = [];
-    public $control = [];
+    private static $clicks = [];
+    public static $device = [];
+    public static $control = [];
     public $plugin;
     private $lastchat = [];
     private $chatdelay = [];
@@ -76,12 +76,10 @@ class EventListener implements Listener
         }
         $player->getInventory()->clearAll();
         self::sendItem($player);
+        $event->setJoinMessage(TextFormat::GRAY. "[" . TextFormat::GREEN . "+" . TextFormat::GRAY . "]". TextFormat::GREEN . " " . $player->getName());
 //        $this->initJoin($player);
         if($this->plugin->rank[$player->getName()] !== "DEFAULT"){
             $player->setAllowFlight(true);
-        }
-        if (count(Server::getInstance()->getOnlinePlayers()) - 1 == 0) {
-            Main::getInstance()->antiCheatTask($this);
         }
         PlayerManager::$playerstatus[$event->getPlayer()->getName()] = PlayerManager::LOBBY;
         Main::getInstance()->getScheduler()->scheduleRepeatingTask(new ScoreboardTask($event->getPlayer()), 20);
@@ -301,7 +299,7 @@ class EventListener implements Listener
     public function onQuit(PlayerQuitEvent $event)
     {
         $player = $event->getPlayer();
-        unset($this->clicks[$event->getPlayer()->getName()]);
+        unset(self::$clicks[$event->getPlayer()->getName()]);
         $event->getPlayer()->getInventory()->clearAll();
         if (isset($this->damager[$event->getPlayer()->getName()])) {
             $damager = Server::getInstance()->getPlayerExact($this->damager[$event->getPlayer()->getName()]);
@@ -341,6 +339,7 @@ class EventListener implements Listener
                 }
             }
         }
+        $event->setQuitMessage(TextFormat::GRAY . "[" . TextFormat::RED . "-" . TextFormat::GRAY . "]" . TextFormat::RED . " " . $player->getName());
         Arena::unsetQueue($player);
         Arena::unsetMatch($player);
         DatabaseControler::setKill($player, DatabaseControler::$kill[$player->getName()]);
@@ -355,12 +354,12 @@ class EventListener implements Listener
 
     public function addClick(Player $player)
     {
-        array_unshift($this->clicks[$player->getName()], microtime(true));
-        if (count($this->clicks[$player->getName()]) >= 100) {
-            array_pop($this->clicks[$player->getName()]);
+        array_unshift(self::$clicks[$player->getName()], microtime(true));
+        if (count(self::$clicks[$player->getName()]) >= 100) {
+            array_pop(self::$clicks[$player->getName()]);
         }
         if (self::$cpspopup[$player->getName()] == 1) {
-            $player->sendTip(TextFormat::AQUA . "CPS: " . TextFormat::RESET . $this->getCps($player));
+            $player->sendTip(TextFormat::AQUA . "CPS: " . TextFormat::RESET . self::getCps($player));
         }
     }
 
@@ -378,13 +377,13 @@ class EventListener implements Listener
         }
     }
 
-    public function getCps(Player $player, float $deltaTime = 1.0, int $roundPrecision = 1): float
+    public static function getCps(Player $player, float $deltaTime = 1.0, int $roundPrecision = 1): float
     {
-        if (empty($this->clicks[$player->getName()])) {
+        if (empty(self::$clicks[$player->getName()])) {
             return 0.0;
         }
         $mt = microtime(true);
-        return round(count(array_filter($this->clicks[$player->getName()], static function (float $t) use ($deltaTime, $mt): bool {
+        return round(count(array_filter(self::$clicks[$player->getName()], static function (float $t) use ($deltaTime, $mt): bool {
                 return ($mt - $t) <= $deltaTime;
             })) / $deltaTime, $roundPrecision);
     }
@@ -451,7 +450,7 @@ class EventListener implements Listener
         $os = ["Unknown", "Android", "iOS", "macOS", "FireOS", "GearVR", "HoloLens", "Win10", "Windows", "Dedicated", "Orbis", "PS4", "Nintendo Switch", "Xbox One"];
         $control = ["Unknown", "Mouse", "Touch", "Controller"];
         $cosmetic = unserialize(base64_decode(DatabaseControler::$cosmetic[$player->getName()]));
-        $this->clicks[$player->getName()] = [];
+        self::$clicks[$player->getName()] = [];
         foreach ($cosmetic["equip"] as $key => $value) {
             if ($value !== "default") {
                 switch ($key) {
@@ -470,11 +469,11 @@ class EventListener implements Listener
             }
         }
         try {
-            $this->control[$player->getName()] = $control[$extradata["CurrentInputMode"]];
+            self::$control[$player->getName()] = $control[$extradata["CurrentInputMode"]];
         } catch (\ErrorException $exception) {
 
         }
-        $this->device[$player->getName()] = $os[$extradata["DeviceOS"]];
+        self::$device[$player->getName()] = $os[$extradata["DeviceOS"]];
         Main::getInstance()->getScheduler()->scheduleRepeatingTask(new NametagTask($player, $this), 1);
         $data = $player->getPlayerInfo()->getExtraData();
         $name = $data["ThirdPartyName"];

@@ -14,8 +14,8 @@ use SandhyR\VilconCore\database\DatabaseControler;
 
 class FormManager{
 
-    private $price = ["cape" => ["Blue Creeper"=> 250000, "Enderman"=> 100000, "Energy" => 30000, "Fire" => 40000, "Red Creeper" => 50000, "Turtle" => 75000, "Pickaxe" => 60000, "Firework" => 70000, "Iron Golem" => 50000], "tags" => [TextFormat::YELLOW . "Krontol" => 1,TextFormat::BLUE . "Vestri"=> 2, TextFormat::DARK_PURPLE . "Neferhir" => 3]];
-    private $tagslist = [TextFormat::YELLOW . "Krontol", TextFormat::BLUE . "Vestri", TextFormat::DARK_PURPLE . "Neferhir"];
+    private $price = ["cape" => ["Blue Creeper"=> 250000, "Enderman"=> 100000, "Energy" => 30000, "Fire" => 40000, "Red Creeper" => 50000, "Turtle" => 75000, "Pickaxe" => 60000, "Firework" => 70000, "Iron Golem" => 50000], "tags" => [TextFormat::YELLOW . "Krontol" => 1,TextFormat::BLUE . "Vestri"=> 2, TextFormat::DARK_PURPLE . "Neferhir" => 3, TextFormat::WHITE . "Kri" . TextFormat::AQUA . "spi" => 4]];
+    private $tagslist = [TextFormat::YELLOW . "Krontol", TextFormat::BLUE . "Vestri", TextFormat::DARK_PURPLE . "Neferhir", TextFormat::WHITE . "Kri" . TextFormat::AQUA . "spi"];
 
     public function ffaForm(Player $player){
         $api =Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
@@ -125,15 +125,12 @@ class FormManager{
                     Arena::addrankQueue($player, PlayerManager::FIST_DUEL);
                     break;
                 case 3:
-                    Arena::addrankQueue($player, PlayerManager::COMBO_DUEL);
-                    break;
-                case 4:
                     Arena::addrankQueue($player, PlayerManager::SUMO_DUEL);
                     break;
-                case 5:
+                case 4:
                     Arena::addrankQueue($player, PlayerManager::GAPPLE_DUEL);
                     break;
-                case 6:
+                case 5:
                     Arena::addrankQueue($player, PlayerManager::VOIDFIGHT_DUEL);
 
             }
@@ -171,15 +168,12 @@ class FormManager{
                     Arena::addUnrankQueue($player, PlayerManager::FIST_DUEL);
                     break;
                 case 3:
-                    Arena::addUnrankQueue($player, PlayerManager::COMBO_DUEL);
-                    break;
-                case 4:
                     Arena::addUnrankQueue($player, PlayerManager::SUMO_DUEL);
                     break;
-                case 5:
+                case 4:
                     Arena::addUnrankQueue($player, PlayerManager::GAPPLE_DUEL);
                     break;
-                case 6:
+                case 5:
                     Arena::addUnrankQueue($player, PlayerManager::VOIDFIGHT_DUEL);
 
             }
@@ -331,6 +325,7 @@ class FormManager{
         foreach ($cape["capes"] as $capes){
             $form->addButton("$capes", -1,"", $capes);
         }
+        $form->addButton("None", -1, "", "None");
         $player->sendForm($form);
         return $form;
     }
@@ -351,7 +346,7 @@ class FormManager{
                     $array = base64_encode(serialize($array));
                     DatabaseControler::$cosmetic[$player->getName()] = $array;
                     DatabaseControler::$coins[$player->getName()] -= $this->price["tags"][$data];
-                    $player->sendMessage(TextFormat::GREEN . "You purchased " . $data . " for " . number_format($this->price["tags"][$data]) . " coins");
+                    $player->sendMessage(TextFormat::GREEN . "You purchased " . $data .TextFormat::GREEN . " for " . number_format($this->price["tags"][$data]) . " coins");
                 } else {
                     $player->sendMessage(TextFormat::RED . "You already have " . $data);
                 }
@@ -394,6 +389,7 @@ class FormManager{
         foreach ($tags["tags"] as $tag){
             $form->addButton("$tag", -1,"", $tag);
         }
+        $form->addButton("None", -1, "", "None");
         $player->sendForm($form);
         return $form;
     }
