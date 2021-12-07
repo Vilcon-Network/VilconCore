@@ -71,6 +71,14 @@ class FormManager{
             $form->sendToPlayer($player);
         } catch (\Error $error){
             Server::getInstance()->getLogger()->error($error->getMessage());
+            $form->setTitle(TextFormat::RED . "FFA");
+            $form->addButton("Nodebuff" . "\n" . "Playing: " . TextFormat::RED . "Offline", 0, "textures/items/potion_bottle_splash_heal");
+            $form->addButton("Resistance" . "\n" . "Playing: " . TextFormat::RED . "Offline", 0, "textures/ui/resistance_effect");
+            $form->addButton("Fist" . "\n" . "Playing: " . TextFormat::RED . "Offline", 0, "textures/items/beef_cooked");
+//        $form->addButton("Combo" . "\n" . "Playing: " . count(Server::getInstance()->getWorldManager()->getWorldByName("combo")->getPlayers()) ?? 0, 0, "textures/items/fish_pufferfish_raw");
+            $form->addButton("Sumo" . "\n" . "Playing: " . TextFormat::RED . "Offline", 0, "textures/items/feather");
+            $form->addButton("Gapple" . "\n" . "Playing:" . TextFormat::RED . "Offline", 0, "textures/items/apple_golden");
+            $form->sendToPlayer($player);
         }
         return $form;
     }
@@ -357,7 +365,7 @@ class FormManager{
         });
         $form->setTitle(TextFormat::RED . "Cosmetic");
         foreach ($this->tagslist as $tags){
-            $form->addButton("$tags", -1,"", $tags);
+            $form->addButton("$tags" . "\n" . TextFormat::RESET . $this->price["tags"][$tags] . " Coins", -1,"", $tags);
         }
         $player->sendForm($form);
         return $form;

@@ -6,7 +6,6 @@ use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\Config;
-use pocketmine\utils\TextFormat;
 use SandhyR\VilconCore\anticheat\AntiCheatListener;
 use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\arena\ArenaResetter;
@@ -130,10 +129,12 @@ class Main extends PluginBase{
             DatabaseControler::setCosmetic($player, DatabaseControler::$cosmetic[$player->getName()]);
             }
         try {
-            foreach (range(0, ArenaResetter::$index["voidfight"]) as $item){
+            ArenaResetter::$index["voidfight"] = 1;
+            foreach (range(1, ArenaResetter::$index["voidfight"]) as $item) {
                 ArenaResetter::removeWorld("voidfight" . $item);
             }
-        } catch (\UnexpectedValueException|\ErrorException $exception){
+        } catch (\ErrorException|\UnexpectedValueException $exception) {
+
         }
     }
 

@@ -40,8 +40,8 @@ class AntiCheatTask extends Task{
 [$this->susplayer->getName()] . ")");
                         Server::getInstance()->getLogger()->info(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $this->susplayer->getName() . " Kicked by bot with reason AutoClicker CPS: " . $this->suscps . " " . TextFormat::GREEN . "(" . $this->susplayer->getNetworkSession()->getPing() . "ms" . ", " . EventListener::$device[$this->susplayer->getName()] . ", " . EventListener::$control
 [$this->susplayer->getName()] . ")");
-                        $this->susplayer->kick("AutoClicker is not allowed");
                     }
+                    $this->susplayer->kick("AutoClicker is not allowed");
                 }
 
             }
