@@ -10,6 +10,10 @@ use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\arena\KitManager;
 use pocketmine\entity\Skin;
 use jojoe77777\FormAPI\SimpleForm;
+use SandhyR\VilconCore\bot\EasyBot;
+use SandhyR\VilconCore\bot\HardBot;
+use SandhyR\VilconCore\bot\HackerBot;
+use SandhyR\VilconCore\bot\MediumBot;
 use SandhyR\VilconCore\database\DatabaseControler;
 
 class FormManager{
@@ -110,7 +114,36 @@ class FormManager{
     }
 
     public function botForm(Player $player){
-
+        $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
+        if ($api === null) {
+        }
+        $form = $api->createSimpleForm(function (Player $player, $data) {
+            $result = $data;
+            if ($result === null) {
+                return true;
+            }
+            switch ($result) {
+                case 0:
+                    Arena::duelBot($player, PlayerManager::EASY_BOT);
+                    break;
+                case 1:
+                    Arena::duelBot($player, PlayerManager::MEDIUM_BOT);
+                    break;
+                case 2:
+                    Arena::duelBot($player, PlayerManager::HARD_BOT);
+                    break;
+                case 3:
+                    Arena::duelBot($player, PlayerManager::HACKER_BOT);
+            }
+            return false;
+        });
+        $form->setTitle(TextFormat::RED . "Self Practice");
+        $form->addButton("Easy Bot", 0, "textures/items/potion_bottle_splash_heal");
+        $form->addButton("Medium Bot", 0, "textures/items/potion_bottle_splash_heal");
+        $form->addButton("Hard Bot", 0, "textures/items/potion_bottle_splash_heal");
+        $form->addButton("Hacker Bot", 0, "textures/items/potion_bottle_splash_heal");
+        $form->sendToPlayer($player);
+        return $form;
     }
 
     public function rankform(Player $player){

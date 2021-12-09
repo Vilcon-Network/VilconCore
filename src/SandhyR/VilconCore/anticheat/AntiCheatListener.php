@@ -5,6 +5,9 @@ namespace SandhyR\VilconCore\anticheat;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\Server;
+use pocketmine\utils\TextFormat;
+use SandhyR\VilconCore\Main;
 
 class AntiCheatListener implements Listener{
 
@@ -19,7 +22,12 @@ class AntiCheatListener implements Listener{
             if(isset($devicemodel[0])){
                 $model = strtoupper($devicemodel[0]);
                 if($model !== $devicemodel[0]){
-                    $event->getPlayer()->kick("Toolbox is not allowed");
+                    foreach (Server::getInstance()->getOnlinePlayers() as $p) {
+                        if(strtoupper(Main::getInstance()->rank[$p->getName()]) == "OWNER" or strtoupper(Main::getInstance()->rank[$p->getName()]) == "ADMIN"){
+                            $p->sendMessage(TextFormat::RED . "STAFF > " . TextFormat::WHITE . $player->getName() . " Detected as Toolbox");
+                        }
+                        $event->getPlayer()->kick("Toolbox is not allowed");
+                    }
                 }
 
             }

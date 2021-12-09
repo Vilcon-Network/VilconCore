@@ -15,7 +15,7 @@ class PlayerManager {
     public const SUMO_DUEL = 6;
     public const BOXING_DUEL = 7;
     public const VOIDFIGHT_DUEL = 8;
-    public const COMBO_DUEL = 9;
+    public const HACKER_BOT = 9;
     public const EASY_BOT = 10;
     public const MEDIUM_BOT = 11;
     public const HARD_BOT = 12;

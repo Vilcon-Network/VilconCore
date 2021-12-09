@@ -3,6 +3,7 @@
 namespace SandhyR\VilconCore\arena;
 
 
+use pocketmine\entity\Location;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\player\Player;
@@ -10,6 +11,7 @@ use pocketmine\Server;
 use pocketmine\world\World;
 use SandhyR\VilconCore\PlayerManager;
 use pocketmine\math\Vector3;
+use SandhyR\VilconCore\task\DuelBotTask;
 use SandhyR\VilconCore\task\DuelTask;
 use SandhyR\VilconCore\Main;
 
@@ -20,7 +22,7 @@ class Arena
     public static $unrankqueue = [];
     public static $rankqueue = [];
     public static $duelkit = [];
-    public static $posduel = [[1232131, 311231, 132113], [1312313, 1321313,1312313]];
+    public static $posduel = [[1, 70, 1], [5, 70, 1]];
     private static $possumo = [2134,24324,24342];
     private static $posvoidfight = [1231,1313,14142];
     public static $duelTimer = [];
@@ -716,6 +718,8 @@ class Arena
                     self::$match["unrank"][$ids[$id]][$p1->getName()] = $p2->getName();
                     self::$match["unrank"][$ids[$id]][$p2->getName()] = $p1->getName();
                     ++self::$duelindex;
+                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+                    PlayerManager::$playerstatus[$p2->getName()] = $id;
                     Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
             }
         }
@@ -1401,6 +1405,8 @@ class Arena
                 self::$match["rank"][$ids[$id]][$p1->getName()] = $p2->getName();
                 self::$match["rank"][$ids[$id]][$p2->getName()] = $p1->getName();
                 ++self::$duelindex;
+                PlayerManager::$playerstatus[$p1->getName()] = $id;
+                PlayerManager::$playerstatus[$p2->getName()] = $id;
                 Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
             }
         }
@@ -1538,4 +1544,14 @@ class Arena
 //         }
 //        return true;
 //    }
+
+public static function duelBot(Player $player, int $id){
+        Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
+        $location = new Location(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2], Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex),$player->getLocation()->getYaw(), $player->getLocation()->getPitch());
+        $player->teleport($location);
+        KitManager::sendDuelKit($player, PlayerManager::NODEBUFF_DUEL);
+        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelBotTask($player, $id), 20);
+
+
+}
 }

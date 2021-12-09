@@ -2,6 +2,7 @@
 
 namespace SandhyR\VilconCore;
 
+use pocketmine\entity\Human;
 use pocketmine\entity\Skin;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
@@ -89,7 +90,6 @@ class EventListener implements Listener
     public function onAttack(EntityDamageByEntityEvent $event)
     {
         $manager = new KitManager();
-        if ($event->getEntity() instanceof Player && $event->getDamager() instanceof Player) {
             $player = $event->getEntity();
             $killer = $event->getDamager();
             if ($player instanceof Player and $killer instanceof Player) {
@@ -167,12 +167,17 @@ class EventListener implements Listener
                     DatabaseControler::$coins[$player->getName()] += mt_rand(20, 50);
                     Utils::addSound($killer);
                 }
+            } elseif($killer instanceof Human and $player instanceof Player){
+                if ($player->getHealth() <= $event->getFinalDamage()) {
+                    $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
+                    self::teleportLobby($player);
+                }
             }
-        }
     }
 
     public static function sendItem(Player $player)
     {
+        $player->getEffects()->clear();
         $player->setGamemode(GameMode::ADVENTURE());
         $player->getInventory()->clearAll();
         $player->getArmorInventory()->clearAll();
@@ -435,9 +440,9 @@ class EventListener implements Listener
     public static function teleportLobby(Player $player)
     {
         PlayerManager::$playerstatus[$player->getName()] = PlayerManager::LOBBY;
-        $player->setHealth(20);
         $player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(Main::getInstance()->getLobby())->getSafeSpawn());
         $player->getInventory()->clearAll();
+        $player->setHealth(20);
         self::sendItem($player);
     }
 
