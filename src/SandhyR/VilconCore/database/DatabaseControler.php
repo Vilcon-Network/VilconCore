@@ -39,7 +39,7 @@ class DatabaseControler extends Database{
         $setting = parent::getDatabase()->query("SELECT * FROM playersetting WHERE username='$playername'")->fetch_assoc();
         $stats = parent::getDatabase()->query("SELECT * FROM playerstats WHERE username='$playername'")->fetch_assoc();
         $cosmetic = parent::getDatabase()->query("SELECT * FROM playercosmetic WHERE username='$playername'")->fetch_assoc();
-        // 1x Query
+        // 1x Query / Table
         self::$cosmetic[$player->getName()] = $cosmetic["cosmetics"];
         self::$kill[$player->getName()] = $stats["kills"];
         self::$death[$player->getName()] = $stats["deaths"];
@@ -55,6 +55,8 @@ class DatabaseControler extends Database{
         parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playerkit (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, nodebuffkit VARCHAR(255) NOT NULL, combokit VARCHAR(255) NOT NULL, builduhckit VARCHAR(255) NOT NULL, voidfightkit VARCHAR(255) NOT NULL,blockinkit VARCHAR(255) NOT NULL);");
         parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playersetting (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, autogg INT(11) NOT NULL, autoez INT(11) NOT NULL, cpspopup INT(11) NOT NULL);");
         parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playercosmetic (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, cosmetics TEXT NOT NULL);");
+        parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS guild (id INT PRIMARY KEY AUTO_INCREMENT, guildname VARCHAR(255) NOT NULL, guildlevel INT(11) NOT NULL, guildexp INT(11) NOT NULL);");
+        parent::getDatabase()->query("CREATE TABLE IF NOT EXISTS playerguild (guildname VARCHAR(255) NOT NULL, playername VARCHAR(255) NOT NULL);");
     }
 
      public static function getKills(Player $player): int{

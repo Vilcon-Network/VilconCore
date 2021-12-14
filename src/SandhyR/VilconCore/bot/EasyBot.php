@@ -10,7 +10,6 @@ use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
-use pocketmine\item\VanillaItems;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\network\mcpe\protocol\types\LevelEvent;
 use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
@@ -26,6 +25,8 @@ use pocketmine\block\Stair;
 use pocketmine\block\Flowable;
 use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
+use pocketmine\utils\TextFormat;
+use SandhyR\VilconCore\EventListener;
 
 class EasyBot extends Human
 {
@@ -316,6 +317,9 @@ class EasyBot extends Human
     {
         $this->getArmorInventory()->clearAll();
         $this->getInventory()->clearAll();
+        $player = $this->target;
+        $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $player->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $this->getName());
+        EventListener::teleportLobby($player);
         parent::kill();
     }
 

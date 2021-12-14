@@ -13,6 +13,7 @@ use SandhyR\VilconCore\command\SetRankCommand;
 use SandhyR\VilconCore\database\Database;
 use SandhyR\VilconCore\database\DatabaseControler;
 use SandhyR\VilconCore\task\AntiCheatTask;
+use SandhyR\VilconCore\task\AsyncLoadGuildTask;
 use SandhyR\VilconCore\task\CombatTask;
 use SandhyR\VilconCore\arena\KitManager;
 
@@ -48,6 +49,7 @@ class Main extends PluginBase{
         $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML, array());
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents(new AntiCheatListener(), $this);
+        $this->getServer()->getAsyncPool()->submitTask(new AsyncLoadGuildTask($this));
         $this->initCommand();
         $this->initDatabase();
         try {

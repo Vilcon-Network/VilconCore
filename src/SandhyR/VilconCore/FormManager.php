@@ -48,16 +48,11 @@ class FormManager{
                     $manager->teleportffa($player, PlayerManager::FIST_FFA);
                     break;
                 case 3:
-                    PlayerManager::$playerstatus[$player->getName()] = PlayerManager::COMBO_FFA;
-                    $manager->sendKit($player, PlayerManager::COMBO_FFA);
-                    $manager->teleportffa($player, PlayerManager::COMBO_FFA);
-                    break;
-                case 4:
                     PlayerManager::$playerstatus[$player->getName()] = PlayerManager::SUMO_FFA;
                     $manager->sendKit($player, PlayerManager::SUMO_FFA);
                     $manager->teleportffa($player, PlayerManager::SUMO_FFA);
                     break;
-                case 5:
+                case 4:
                     PlayerManager::$playerstatus[$player->getName()] = PlayerManager::GAPPLE_FFA;
                     $manager->sendKit($player, PlayerManager::GAPPLE_FFA);
                     $manager->teleportffa($player, PlayerManager::GAPPLE_FFA);

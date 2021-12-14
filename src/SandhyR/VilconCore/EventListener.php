@@ -171,6 +171,7 @@ class EventListener implements Listener
                 if ($player->getHealth() <= $event->getFinalDamage()) {
                     $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
                     self::teleportLobby($player);
+                    $event->cancel();
                 }
             }
     }
