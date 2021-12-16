@@ -33,6 +33,7 @@ use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use pocketmine\world\sound\EndermanTeleportSound;
 use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\arena\KitManager;
 use SandhyR\VilconCore\database\Database;
@@ -43,6 +44,7 @@ use SandhyR\VilconCore\task\KronTask;
 use SandhyR\VilconCore\task\NametagTask;
 use pocketmine\network\mcpe\protocol\EmotePacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use SandhyR\VilconCore\task\RespawnTask;
 use SandhyR\VilconCore\task\ScoreboardTask;
 
 class EventListener implements Listener
@@ -148,7 +150,16 @@ class EventListener implements Listener
                     Server::getInstance()->broadcastMessage($dm);
                     $manager->sendKit($player, PlayerManager::$playerstatus[$player->getName()]);
                 } else {
-                    if(Arena::isMatch($player) and Arena::isRankDuel($killer)){
+                    if(Arena::isVoidFight($player) and Arena::isVoidFight($player)){
+                        if(isset(Game::$bed[$player->getName()]) and isset(Game::$bed[$killer->getName()])){
+                            if(Game::$bed[$player->getName()]) {
+                                $player->setGamemode(GameMode::SPECTATOR());
+                                Main::getInstance()->getScheduler()->scheduleRepeatingTask(new RespawnTask($player), 20);
+                                return;
+                            }
+                        }
+                    }
+                    if(Arena::isRankDuel($player) and Arena::isRankDuel($killer)){
                         $this->addEloToProperty($killer, mt_rand(10, 20));
                     }
                     self::teleportLobby($player);
@@ -595,16 +606,30 @@ class EventListener implements Listener
     {
         $player = $event->getPlayer();
         if($event->getBlock() instanceof Bed){
-            var_dump(substr($event->getBlock()->getPosition()->getWorld()->getFolderName(), 0, 9));
             if(substr($event->getBlock()->getPosition()->getWorld()->getFolderName(), 0, 9) == "voidfight") {
                 $pos = ["x" => $event->getBlock()->getPosition()->getX(), "y" => $event->getBlock()->getPosition()->getY(), "z" => $event->getBlock()->getPosition()->getZ()];
                 if ($event->getBlock()->getPosition()->getY() == 10) {
                     if (isset(Game::$team[$player->getName()])) {
                         if (Game::$team[$player->getName()] !== "blue") {
-                            //TODO BED BLUE DESTROYED
+                            $enemy = Game::$enemy[$player->getName()];
+                            if($enemy->isOnline()){
+                                $enemy->sendTitle(TextFormat::BOLD . "BED DESTROYED", TextFormat::GREEN . "You no longer to respawn");
+                                Game::$bed[$enemy->getName()] = false;
+                            }
                             return;
                         } else {
-                            $player->sendMessage("You cant break your own bed");
+                            $player->sendMessage(TextFormat::RED . "You cant break bed your team");
+                            $event->cancel();
+                        }
+                        if(Game::$team[$player->getName()] !== "red"){
+                            $enemy = Game::$enemy[$player->getName()];
+                            if($enemy->isOnline()){
+                                $enemy->sendTitle(TextFormat::BOLD . "BED DESTROYED", TextFormat::GREEN . "You no longer to respawn");
+                                Game::$bed[$enemy->getName()] = false;
+                            }
+                            return;
+                        } else {
+                            $player->sendMessage(TextFormat::RED . "You cant break bed your team");
                             $event->cancel();
                         }
                     }
@@ -617,10 +642,7 @@ class EventListener implements Listener
 
     public function onPlace(BlockPlaceEvent $event)
     {
-        $player = $event->getPlayer();
-        if(!Server::getInstance()->isOp($player->getName())) {
             $event->cancel();
-        }
     }
 
     public function addEloToProperty(Player $player, int $value)

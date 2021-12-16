@@ -2,9 +2,11 @@
 
 namespace SandhyR\VilconCore\game;
 
+use pocketmine\player\Player;
+
 class Game{
 
-    /** @var array */
+    /** @var bool[] */
     public static $bed = [];
 
     /** @var int[] */
@@ -12,4 +14,7 @@ class Game{
 
     /** @var array */
     public static $team = [];
+
+    /** @var Player[] */
+    public static $enemy = [];
 }

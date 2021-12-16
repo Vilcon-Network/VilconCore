@@ -1554,4 +1554,10 @@ public static function duelBot(Player $player, int $id){
 
 
 }
+
+public static function isVoidFight(Player $player){
+        foreach (self::$match["voidfight"] as $index => $match) {
+            return $index == $player->getName() or $match == $player->getName();
+        }
+    }
 }
