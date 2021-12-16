@@ -2,6 +2,7 @@
 
 namespace SandhyR\VilconCore;
 
+use pocketmine\block\Bed;
 use pocketmine\entity\Human;
 use pocketmine\entity\Skin;
 use pocketmine\event\block\BlockBreakEvent;
@@ -36,6 +37,7 @@ use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\arena\KitManager;
 use SandhyR\VilconCore\database\Database;
 use SandhyR\VilconCore\database\DatabaseControler;
+use SandhyR\VilconCore\game\Game;
 use SandhyR\VilconCore\task\AFKTask;
 use SandhyR\VilconCore\task\KronTask;
 use SandhyR\VilconCore\task\NametagTask;
@@ -77,9 +79,9 @@ class EventListener implements Listener
         }
         $player->getInventory()->clearAll();
         self::sendItem($player);
-        $event->setJoinMessage(TextFormat::GRAY. "[" . TextFormat::GREEN . "+" . TextFormat::GRAY . "]". TextFormat::GREEN . " " . $player->getName());
+        $event->setJoinMessage(TextFormat::GRAY . "[" . TextFormat::GREEN . "+" . TextFormat::GRAY . "]" . TextFormat::GREEN . " " . $player->getName());
 //        $this->initJoin($player);
-        if($this->plugin->rank[$player->getName()] !== "DEFAULT"){
+        if ($this->plugin->rank[$player->getName()] !== "DEFAULT") {
             $player->setAllowFlight(true);
         }
         PlayerManager::$playerstatus[$event->getPlayer()->getName()] = PlayerManager::LOBBY;
@@ -90,90 +92,93 @@ class EventListener implements Listener
     public function onAttack(EntityDamageByEntityEvent $event)
     {
         $manager = new KitManager();
-            $player = $event->getEntity();
-            $killer = $event->getDamager();
-            if ($player instanceof Player and $killer instanceof Player) {
-                $kron = ["largeseconds", "krivgalaxy", "teh kotak1846", "justintanjaya", "necurine", "ipqtan", "kynxh", "ryankebo", "lorddaichi1", "idxchi"];
-                if (in_array(strtolower($killer->getName()), $kron)) {
-                    $event->setBaseDamage(0.0);
-                    $event->setKnockBack(0.0);
-                }
-                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby() or $killer->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
-                    $event->cancel();
-                }
-                if (!isset($this->damager[$player->getName()]) and !isset($this->damager[$killer->getName()]) and !$event->isCancelled()) {
-                    $this->setEnemy($player, $killer);
-                    $this->setTimer($player, $killer);
-                    $player->sendMessage("You are in combat now");
-                    $killer->sendMessage("You are in combat now");
-                    Main::getInstance()->antiInterruptTask($player, $killer, $this);
-                } elseif (isset($this->damager[$player->getName()]) and !isset($this->damager[$killer->getName()])) {
+        $player = $event->getEntity();
+        $killer = $event->getDamager();
+        if ($player instanceof Player and $killer instanceof Player) {
+            $kron = ["largeseconds", "krivgalaxy", "teh kotak1846", "justintanjaya", "necurine", "ipqtan", "kynxh", "ryankebo", "lorddaichi1", "idxchi"];
+            if (in_array(strtolower($killer->getName()), $kron)) {
+                $event->setBaseDamage(0.0);
+                $event->setKnockBack(0.0);
+            }
+            if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby() or $killer->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                $event->cancel();
+            }
+            if (!isset($this->damager[$player->getName()]) and !isset($this->damager[$killer->getName()]) and !$event->isCancelled()) {
+                $this->setEnemy($player, $killer);
+                $this->setTimer($player, $killer);
+                $player->sendMessage("You are in combat now");
+                $killer->sendMessage("You are in combat now");
+                Main::getInstance()->antiInterruptTask($player, $killer, $this);
+            } elseif (isset($this->damager[$player->getName()]) and !isset($this->damager[$killer->getName()])) {
+                $event->cancel();
+                $killer->sendMessage(TextFormat::RED . "Interrupting is not allowed!");
+            } elseif (!isset($this->damager[$player->getName()]) and isset($this->damager[$killer->getName()])) {
+                $event->cancel();
+                $killer->sendMessage(TextFormat::RED . "Your enemy is " . $this->damager[$killer->getName()]);
+            } elseif (isset($this->damager[$player->getName()])) {
+                if ($killer->getName() !== $this->damager[$player->getName()]) {
                     $event->cancel();
                     $killer->sendMessage(TextFormat::RED . "Interrupting is not allowed!");
-                } elseif (!isset($this->damager[$player->getName()]) and isset($this->damager[$killer->getName()])) {
-                    $event->cancel();
-                    $killer->sendMessage(TextFormat::RED . "Your enemy is " . $this->damager[$killer->getName()]);
-                } elseif (isset($this->damager[$player->getName()])) {
-                    if ($killer->getName() !== $this->damager[$player->getName()]) {
-                        $event->cancel();
-                        $killer->sendMessage(TextFormat::RED . "Interrupting is not allowed!");
-                    } else {
-                        $this->setTimer($player, $killer);
-                    }
-                }
-                if ($player->getHealth() <= $event->getFinalDamage()) {
-                    if (!Arena::isMatch($player) and !Arena::isMatch($killer)) {
-                        self::teleportLobby($player);
-                        $worldname = $killer->getWorld()->getFolderName();
-                        $finalhealth = $killer->getHealth();
-                        $weapon = $killer->getInventory()->getItemInHand()->getName();
-                        $playername = $player->getDisplayName();
-                        $killername = $killer->getDisplayName();
-                        $messages = ["quickied", "railed", "ezed", "clapped", "given an L", "smashed", "botted", "utterly defeated", "swept off their feet", "sent to the heavens", "killed", "owned"];
-                        $potsA = 0;
-                        $potsB = 0;
-                        foreach ($player->getInventory()->getContents() as $pots) {
-                            if ($pots instanceof SplashPotion) ++$potsA;
-                        }
-                        foreach ($killer->getInventory()->getContents() as $pots) {
-                            if ($pots instanceof SplashPotion) ++$potsB;
-                        }
-                        if ($killer->getWorld()->getFolderName() == "nodebuff" or $killer->getWorld()->getFolderName() == "nodebuff-low" or $killer->getWorld()->getFolderName() == "nodebuff-java") {
-                            $dm = $player->getDisplayName() . " §6[" . $potsA . " Pots] §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $potsB . " Pots - " . $finalhealth . " HP]";
-                        } else {
-                            $dm = $player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $finalhealth . " HP]";
-                        }
-                        Server::getInstance()->broadcastMessage($dm);
-                        $manager->sendKit($player, PlayerManager::$playerstatus[$player->getName()]);
-                    } else {
-                            self::teleportLobby($player);
-                            $killer->sendTitle(TextFormat::GOLD . "VICTORY");
-                            $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
-                            $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
-                            self::teleportLobby($killer);
-                            --Arena::$duelindex;
-                            Arena::unsetMatch($player);
-                            Arena::unsetMatch($killer);
-                    }
-                    if (self::$autoez[$killer->getName()] == 1) {
-                        $killer->chat("ez");
-                    }
-                    if (self::$autogg[$killer->getName()] == 1) {
-                        $killer->chat("gg");
-                    }
-                    ++DatabaseControler::$kill[$killer->getName()];
-                    ++DatabaseControler::$death[$player->getName()];
-                    LevelManager::addExp($killer, mt_rand(20, 50));
-                    DatabaseControler::$coins[$player->getName()] += mt_rand(20, 50);
-                    Utils::addSound($killer);
-                }
-            } elseif($killer instanceof Human and $player instanceof Player){
-                if ($player->getHealth() <= $event->getFinalDamage()) {
-                    $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
-                    self::teleportLobby($player);
-                    $event->cancel();
+                } else {
+                    $this->setTimer($player, $killer);
                 }
             }
+            if ($player->getHealth() <= $event->getFinalDamage()) {
+                if (!Arena::isMatch($player) and !Arena::isMatch($killer)) {
+                    self::teleportLobby($player);
+                    $worldname = $killer->getWorld()->getFolderName();
+                    $finalhealth = $killer->getHealth();
+                    $weapon = $killer->getInventory()->getItemInHand()->getName();
+                    $playername = $player->getDisplayName();
+                    $killername = $killer->getDisplayName();
+                    $messages = ["quickied", "railed", "ezed", "clapped", "given an L", "smashed", "botted", "utterly defeated", "swept off their feet", "sent to the heavens", "killed", "owned"];
+                    $potsA = 0;
+                    $potsB = 0;
+                    foreach ($player->getInventory()->getContents() as $pots) {
+                        if ($pots instanceof SplashPotion) ++$potsA;
+                    }
+                    foreach ($killer->getInventory()->getContents() as $pots) {
+                        if ($pots instanceof SplashPotion) ++$potsB;
+                    }
+                    if ($killer->getWorld()->getFolderName() == "nodebuff" or $killer->getWorld()->getFolderName() == "nodebuff-low" or $killer->getWorld()->getFolderName() == "nodebuff-java") {
+                        $dm = $player->getDisplayName() . " §6[" . $potsA . " Pots] §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $potsB . " Pots - " . $finalhealth . " HP]";
+                    } else {
+                        $dm = $player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $finalhealth . " HP]";
+                    }
+                    Server::getInstance()->broadcastMessage($dm);
+                    $manager->sendKit($player, PlayerManager::$playerstatus[$player->getName()]);
+                } else {
+                    if(Arena::isMatch($player) and Arena::isRankDuel($killer)){
+                        $this->addEloToProperty($killer, mt_rand(10, 20));
+                    }
+                    self::teleportLobby($player);
+                    $killer->sendTitle(TextFormat::GOLD . "VICTORY");
+                    $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
+                    $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
+                    self::teleportLobby($killer);
+                    --Arena::$duelindex;
+                    Arena::unsetMatch($player);
+                    Arena::unsetMatch($killer);
+                }
+                if (self::$autoez[$killer->getName()] == 1) {
+                    $killer->chat("ez");
+                }
+                if (self::$autogg[$killer->getName()] == 1) {
+                    $killer->chat("gg");
+                }
+                ++DatabaseControler::$kill[$killer->getName()];
+                ++DatabaseControler::$death[$player->getName()];
+                LevelManager::addExp($killer, mt_rand(20, 50));
+                DatabaseControler::$coins[$player->getName()] += mt_rand(20, 50);
+                Utils::addSound($killer);
+            }
+        } elseif ($killer instanceof Human and $player instanceof Player) {
+            if ($player->getHealth() <= $event->getFinalDamage()) {
+                $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
+                self::teleportLobby($player);
+                $event->cancel();
+            }
+        }
     }
 
     public static function sendItem(Player $player)
@@ -469,7 +474,7 @@ class EventListener implements Listener
                         $player->sendSkin();
                         break;
                     case "wings":
-                        // yes
+                        // TODO tdk tw bikin wings di pm4
                         break;
                 }
             }
@@ -588,12 +593,34 @@ class EventListener implements Listener
 
     public function onBreak(BlockBreakEvent $event)
     {
+        $player = $event->getPlayer();
+        if($event->getBlock() instanceof Bed){
+            var_dump(substr($event->getBlock()->getPosition()->getWorld()->getFolderName(), 0, 9));
+            if(substr($event->getBlock()->getPosition()->getWorld()->getFolderName(), 0, 9) == "voidfight") {
+                $pos = ["x" => $event->getBlock()->getPosition()->getX(), "y" => $event->getBlock()->getPosition()->getY(), "z" => $event->getBlock()->getPosition()->getZ()];
+                if ($event->getBlock()->getPosition()->getY() == 10) {
+                    if (isset(Game::$team[$player->getName()])) {
+                        if (Game::$team[$player->getName()] !== "blue") {
+                            //TODO BED BLUE DESTROYED
+                            return;
+                        } else {
+                            $player->sendMessage("You cant break your own bed");
+                            $event->cancel();
+                        }
+                    }
+                }
+                return;
+            }
+        }
         $event->cancel();
     }
 
     public function onPlace(BlockPlaceEvent $event)
     {
-        $event->cancel();
+        $player = $event->getPlayer();
+        if(!Server::getInstance()->isOp($player->getName())) {
+            $event->cancel();
+        }
     }
 
     public function addEloToProperty(Player $player, int $value)
