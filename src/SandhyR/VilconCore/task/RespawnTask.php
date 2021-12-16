@@ -5,6 +5,7 @@ namespace SandhyR\VilconCore\task;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat;
+use SandhyR\VilconCore\bot\EasyBot;
 
 class RespawnTask extends Task{
 

@@ -17,6 +17,8 @@ class ScoreboardTask  extends Task{
     /** @var Player */
     private Player $player;
 
+    const ip = "play.mitikalmc.care";
+
     public function __construct(Player $player)
     {
         $this->player = $player;
@@ -40,7 +42,7 @@ class ScoreboardTask  extends Task{
             } else {
                 $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
             }
-            $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
+            $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
             break;
                 case PlayerManager::NODEBUFF_FFA:
                     $api->new($player, "NodebuffFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
@@ -54,7 +56,7 @@ class ScoreboardTask  extends Task{
                     } else {
                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
                     }
-                    $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
+                    $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
                     break;
                 case PlayerManager::FIST_FFA:
                     $api->new($player, "FistFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
@@ -68,7 +70,7 @@ class ScoreboardTask  extends Task{
                     } else {
                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
                     }
-                    $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
+                    $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
                     break;
                 case PlayerManager::SUMO_FFA:
                     $api->new($player, "SumoFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
@@ -82,7 +84,7 @@ class ScoreboardTask  extends Task{
                     } else {
                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
                     }
-                    $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
+                    $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
                     break;
                 case PlayerManager::RESISTANCE_FFA:
                     $api->new($player, "ResistanceFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
@@ -96,7 +98,7 @@ class ScoreboardTask  extends Task{
                     } else {
                         $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
                     }
-                    $api->setLine($player, 7 ,TextFormat::AQUA . "play.vilconmc.net");
+                    $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
                     break;
                 case PlayerManager::NODEBUFF_DUEL:
                     foreach (Arena::$match as $index => $matchs) {
