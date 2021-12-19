@@ -156,6 +156,8 @@ class EventListener implements Listener
                                 $player->setGamemode(GameMode::SPECTATOR());
                                 Main::getInstance()->getScheduler()->scheduleRepeatingTask(new RespawnTask($player), 20);
                                 return;
+                            } else {
+                                // TODO END MATCH
                             }
                         }
                     }

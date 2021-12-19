@@ -18,6 +18,7 @@ class ScoreboardTask  extends Task{
     private Player $player;
 
     const ip = "play.mitikalmc.care";
+    const name = "Mitikal";
 
     public function __construct(Player $player)
     {
@@ -31,7 +32,7 @@ class ScoreboardTask  extends Task{
             $api = Scoreboards::getInstance();
             switch (PlayerManager::$playerstatus[$player->getName()]) {
                 case PlayerManager::LOBBY;
-            $api->new($player, "Lobby", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+            $api->new($player, "Lobby", TextFormat::BOLD . TextFormat::AQUA . self::name);
             $api->setLine($player, 1 ,TextFormat::WHITE."Online ".TextFormat::AQUA. count(Server::getInstance()->getOnlinePlayers()));
             $api->setLine($player, 2 ,TextFormat::WHITE."Ping: " . TextFormat::AQUA. $player->getNetworkSession()->getPing());
             $api->setLine($player, 3 ," ");
@@ -45,7 +46,7 @@ class ScoreboardTask  extends Task{
             $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
             break;
                 case PlayerManager::NODEBUFF_FFA:
-                    $api->new($player, "NodebuffFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                    $api->new($player, "NodebuffFFA", TextFormat::BOLD . TextFormat::AQUA . self::name);
                     $api->setLine($player, 1 ,TextFormat::WHITE."Arena: " . TextFormat::AQUA . "Nodebuff");
                     $api->setLine($player, 2 ,TextFormat::WHITE."Ping: " . TextFormat::AQUA. $player->getNetworkSession()->getPing());
                     $api->setLine($player, 3 ," ");
@@ -59,7 +60,7 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
                     break;
                 case PlayerManager::FIST_FFA:
-                    $api->new($player, "FistFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                    $api->new($player, "FistFFA", TextFormat::BOLD . TextFormat::AQUA . self::name);
                     $api->setLine($player, 1 ,TextFormat::WHITE."Arena: " . TextFormat::AQUA . "Fist");
                     $api->setLine($player, 2 ,TextFormat::WHITE."Ping: " . TextFormat::AQUA. $player->getNetworkSession()->getPing());
                     $api->setLine($player, 3 ," ");
@@ -73,7 +74,7 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
                     break;
                 case PlayerManager::SUMO_FFA:
-                    $api->new($player, "SumoFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                    $api->new($player, "SumoFFA", TextFormat::BOLD . TextFormat::AQUA . self::name);
                     $api->setLine($player, 1 ,TextFormat::WHITE."Arena: " . TextFormat::AQUA . "Sumo");
                     $api->setLine($player, 2 ,TextFormat::WHITE."Ping: " . TextFormat::AQUA. $player->getNetworkSession()->getPing());
                     $api->setLine($player, 3 ," ");
@@ -87,7 +88,7 @@ class ScoreboardTask  extends Task{
                     $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
                     break;
                 case PlayerManager::RESISTANCE_FFA:
-                    $api->new($player, "ResistanceFFA", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                    $api->new($player, "ResistanceFFA", TextFormat::BOLD . TextFormat::AQUA . self::name);
                     $api->setLine($player, 1 ,TextFormat::WHITE."Arena: " . TextFormat::AQUA . "Resistance");
                     $api->setLine($player, 2 ,TextFormat::WHITE."Ping: " . TextFormat::AQUA. $player->getNetworkSession()->getPing());
                     $api->setLine($player, 3 ," ");
@@ -106,7 +107,7 @@ class ScoreboardTask  extends Task{
                             if ($indeks == $player->getName()) {
                                 $enemy = Server::getInstance()->getPlayerExact($match);
                                 if ($enemy->isOnline()) {
-                                    $api->new($player, "NodebuffDuel", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                                    $api->new($player, "NodebuffDuel", TextFormat::BOLD . TextFormat::AQUA . self::name);
                                     $api->setLine($player, 1, TextFormat::WHITE . "Duel: " . TextFormat::AQUA . "Nodebuff");
                                     $api->setLine($player, 2, TextFormat::WHITE . "Duration: " . TextFormat::AQUA . self::intToString(Arena::$duelTimer[$player->getName()]));
                                     $api->setLine($player, 3, TextFormat::WHITE . "Your Ping: " . TextFormat::AQUA . $player->getNetworkSession()->getPing());
@@ -122,7 +123,7 @@ class ScoreboardTask  extends Task{
                             if ($indeks == $player->getName()) {
                                 $enemy = Server::getInstance()->getPlayerExact($match);
                                 if ($enemy->isOnline()) {
-                                    $api->new($player, "FistDuel", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                                    $api->new($player, "FistDuel", TextFormat::BOLD . TextFormat::AQUA . self::name);
                                     $api->setLine($player, 1, TextFormat::WHITE . "Duel: " . TextFormat::AQUA . "Fist");
                                     $api->setLine($player, 2, TextFormat::WHITE . "Duration: " . TextFormat::AQUA . self::intToString(Arena::$duelTimer[$player->getName()]));
                                     $api->setLine($player, 3, TextFormat::WHITE . "Your Ping: " . TextFormat::AQUA . $player->getNetworkSession()->getPing());
@@ -138,7 +139,7 @@ class ScoreboardTask  extends Task{
                             if ($indeks == $player->getName()) {
                                 $enemy = Server::getInstance()->getPlayerExact($match);
                                 if ($enemy->isOnline()) {
-                                    $api->new($player, "SumoDuel", TextFormat::BOLD . TextFormat::AQUA . "Vilcon");
+                                    $api->new($player, "SumoDuel", TextFormat::BOLD . TextFormat::AQUA . self::name);
                                     $api->setLine($player, 1, TextFormat::WHITE . "Duel: " . TextFormat::AQUA . "Sumo");
                                     $api->setLine($player, 2, TextFormat::RED . "Opponent:");
                                     $api->setLine($player, 3, TextFormat::WHITE . "Duration: " . TextFormat::AQUA . self::intToString(Arena::$duelTimer[$player->getName()]));
