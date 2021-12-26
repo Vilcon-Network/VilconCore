@@ -11,6 +11,9 @@ class PlayerManager {
 
     /** @var bool[] */
     public static $iscombat = [];
+
+    /** @var bool[] */
+    public static $build = [];
     public const LOBBY = 0;
     public const NODEBUFF_FFA = 1;
     public const SUMO_FFA = 2;

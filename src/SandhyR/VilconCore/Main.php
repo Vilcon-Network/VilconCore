@@ -9,6 +9,7 @@ use pocketmine\utils\Config;
 use SandhyR\VilconCore\anticheat\AntiCheatListener;
 use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\arena\ArenaResetter;
+use SandhyR\VilconCore\command\BuildCommand;
 use SandhyR\VilconCore\command\HubCommand;
 use SandhyR\VilconCore\command\SetRankCommand;
 use SandhyR\VilconCore\database\Database;
@@ -102,6 +103,7 @@ class Main extends PluginBase{
     {
         $this->getServer()->getCommandMap()->register("setRank", new SetRankCommand("setrank", "Setrank Player", $this));
         $this->getServer()->getCommandMap()->register("Hub", new HubCommand("lobby", "Teleport to lobby"));
+        $this->getServer()->getCommandMap()->register("Build", new BuildCommand("build", "Toggle build mode", $this));
     }
 
     public function getLobby(){

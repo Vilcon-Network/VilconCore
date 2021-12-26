@@ -639,7 +639,10 @@ class EventListener implements Listener
                 return;
             }
         }
-        $event->cancel();
+        $build = PlayerManager::$build[$player->getName()] ?? false;
+        if(!$build) {
+            $event->cancel();
+        }
     }
 
     public function onPlace(BlockPlaceEvent $event)
