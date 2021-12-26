@@ -23,7 +23,7 @@ class BuildCommand extends Command{
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
         if($sender instanceof Player){
-            if(!isset($args[0])) {
+            if(isset($args[0])) {
                 if (strtoupper($this->plugin->rank[$sender->getName()]) == "OWNER" or strtoupper($this->plugin->rank[$sender->getName()]) == "ADMIN" or $sender->hasPermission(DefaultPermissions::ROOT_OPERATOR)) {
                     if($args[0] == "on"){
                         PlayerManager::$build[$sender->getName()] = true;
