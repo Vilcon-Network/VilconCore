@@ -7,6 +7,7 @@ use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat;
 use SandhyR\VilconCore\EventListener;
 use SandhyR\VilconCore\Main;
+use SandhyR\VilconCore\PlayerManager;
 
 class CombatTask extends Task{
 
@@ -67,5 +68,11 @@ class CombatTask extends Task{
             $this->player2->sendMessage(TextFormat::GREEN."You are not in combat now");
             $this->getHandler()->cancel();
         }
+    }
+
+    public function onCancel(): void
+    {
+       PlayerManager::$iscombat[$this->player1->getName()] = false;
+       PlayerManager::$iscombat[$this->player2->getName()] = false;
     }
 }

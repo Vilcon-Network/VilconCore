@@ -5,7 +5,12 @@ namespace SandhyR\VilconCore;
 
 class PlayerManager {
 
+
+    /** @var int[] */
     public static $playerstatus = [];
+
+    /** @var bool[] */
+    public static $iscombat = [];
     public const LOBBY = 0;
     public const NODEBUFF_FFA = 1;
     public const SUMO_FFA = 2;
