@@ -647,7 +647,11 @@ class EventListener implements Listener
 
     public function onPlace(BlockPlaceEvent $event)
     {
+        $player = $event->getPlayer();
+        $build = PlayerManager::$build[$player->getName()] ?? false;
+        if(!$build) {
             $event->cancel();
+        }
     }
 
     public function addEloToProperty(Player $player, int $value)
