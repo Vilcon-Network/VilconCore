@@ -22,7 +22,7 @@ class Arena
     public static $unrankqueue = [];
     public static $rankqueue = [];
     public static $duelkit = [];
-    public static $posduel = [[1, 70, 1], [5, 70, 1]];
+    public static $posduel = [[235, 70, 245], [277, 71, 271]];
     private static $possumo = [2134,24324,24342];
     private static $posvoidfight = [1231,1313,14142];
     public static $duelTimer = [];
@@ -1555,9 +1555,10 @@ public static function duelBot(Player $player, int $id){
 
 }
 
-public static function isVoidFight(Player $player){
-        foreach (self::$match["voidfight"] as $index => $match) {
-            return $index == $player->getName() or $match == $player->getName();
-        }
+public static function isVoidFight(Player $player)
+{
+    foreach (self::$match["voidfight"] as $index => $match) {
+        return $index == $player->getName() or $match == $player->getName();
     }
+}
 }
