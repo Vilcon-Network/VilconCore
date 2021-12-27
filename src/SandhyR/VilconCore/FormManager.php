@@ -243,16 +243,16 @@ class FormManager{
                 case 1:
                     $this->tagsshop($player);
                     break;
-                case 2:
-                    $this->soundshop($player);
-                    break;
+//                case 2:
+//                    $this->soundshop($player);
+//                    break;
             }
             return false;
         });
         $form->setTitle(TextFormat::RED . "Cosmetic Shop");
         $form->addButton("Cape Shop");
         $form->addButton("Tags Shop");
-        $form->addButton("Kill Sound Shop");
+//        $form->addButton("Kill Sound Shop");
         $player->sendForm($form);
         return $form;
     }
