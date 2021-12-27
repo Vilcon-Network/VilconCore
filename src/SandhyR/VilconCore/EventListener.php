@@ -450,8 +450,8 @@ class EventListener implements Listener
                     ++DatabaseControler::$death[$player->getName()];
                     LevelManager::addExp($killer, mt_rand(20, 50));
                 }
-                self::teleportLobby($player);
             }
+            self::teleportLobby($player);
         }
     }
 
