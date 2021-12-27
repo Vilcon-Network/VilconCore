@@ -432,7 +432,7 @@ class EventListener implements Listener
     {
         $player = $event->getPlayer();
         self::$movementsession[$player->getName()] = 120;
-        if ($player->getPosition()->asVector3()->getY() <= 2) {
+        if ($player->getPosition()->getY() <= 2) {
             if ($player->getWorld()->getFolderName() == "sumo") {
                 if (isset($this->damager[$player->getName()])) {
                     $messages = ["quickied", "railed", "ezed", "clapped", "given an L", "smashed", "botted", "utterly defeated", "swept off their feet", "sent to the heavens", "killed", "owned"];
@@ -449,10 +449,8 @@ class EventListener implements Listener
                     }
                     ++DatabaseControler::$death[$player->getName()];
                     LevelManager::addExp($killer, mt_rand(20, 50));
-                } else {
-                    Server::getInstance()->broadcastMessage($player->getName() . " fell into void");
-                    self::teleportLobby($player);
                 }
+                self::teleportLobby($player);
             }
         }
     }
