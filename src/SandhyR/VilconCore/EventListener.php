@@ -11,6 +11,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
@@ -690,5 +691,18 @@ class EventListener implements Listener
 
     public function onDrop(PlayerDropItemEvent $event){
         $event->cancel();
+    }
+
+    public function onHit(ProjectileHitBlockEvent $event){
+        $projectile = $event->getEntity();
+        if($projectile instanceof \pocketmine\entity\projectile\SplashPotion){
+            $player = $projectile->getOwningEntity();
+            if($player->isAlive()){
+                $distance = $projectile->getPosition()->distance($player->getPosition()->asVector3());
+                if($player instanceof Player and $distance <= 3){
+                    $player->setHealth($player->getHealth() + 4);
+                }
+            }
+        }
     }
 }
