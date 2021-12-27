@@ -42,6 +42,7 @@ class DuelBotTask extends Task{
             if($this->status){
                 $this->player->sendTitle(TextFormat::RED . $this->timer);
                 --$this->timer;
+                $this->player->setImmobile(true);
                 if($this->timer <= 0){
                     $location = new Location(Arena::$posduel[1][0],Arena::$posduel[1][1], Arena::$posduel[1][2],$this->player->getWorld(), 0,0);
                     $this->player->sendTitle(TextFormat::GREEN . "FIGHT!");
@@ -72,6 +73,7 @@ class DuelBotTask extends Task{
                             break;
                     }
                     $this->status = false;
+                    $this->player->setImmobile(false);
                 }
             } else {
                 ++Arena::$duelTimer[$this->player->getName()];
