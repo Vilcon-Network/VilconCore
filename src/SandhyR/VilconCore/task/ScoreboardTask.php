@@ -38,7 +38,7 @@ class ScoreboardTask  extends Task{
             $api->setLine($player, 2 ,TextFormat::WHITE."Ping: " . TextFormat::AQUA. $player->getNetworkSession()->getPing());
             $api->setLine($player, 3 ," ");
             $api->setLine($player, 4, TextFormat::WHITE."Level: " . TextFormat::AQUA . LevelManager::$level[$player->getName()]);
-            $api->setLine($player, 5, TextFormat::WHITE . "Coins: " . TextFormat::AQUA . DatabaseControler::$coins[$player->getName()]);
+            $api->setLine($player, 5, TextFormat::WHITE . "Coins: " .TextFormat::AQUA . number_format(DatabaseControler::$coins[$player->getName()]));
             $api->setLine($player, 6 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
             $api->setLine($player, 7 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
             if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
