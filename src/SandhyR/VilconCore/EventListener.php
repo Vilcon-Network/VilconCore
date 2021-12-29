@@ -184,7 +184,7 @@ class EventListener implements Listener
                 ++DatabaseControler::$kill[$killer->getName()];
                 ++DatabaseControler::$death[$player->getName()];
                 LevelManager::addExp($killer, mt_rand(20, 50));
-                DatabaseControler::$coins[$player->getName()] += mt_rand(20, 50);
+                DatabaseControler::$coins[$killer->getName()] += mt_rand(20, 50);
                 Utils::addSound($killer);
             }
         } elseif ($killer instanceof Human and $player instanceof Player) {

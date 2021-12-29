@@ -46,7 +46,7 @@ class ScoreboardTask  extends Task{
             } else {
                 $api->setLine($player, 8, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
             }
-            $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
+            $api->setLine($player, 9 ,TextFormat::AQUA . self::ip);
             break;
                 case PlayerManager::NODEBUFF_FFA:
                     $api->new($player, "NodebuffFFA", TextFormat::BOLD . TextFormat::AQUA . self::name);
