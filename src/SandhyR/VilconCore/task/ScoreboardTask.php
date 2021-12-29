@@ -8,6 +8,7 @@ use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\database\DatabaseControler;
+use SandhyR\VilconCore\LevelManager;
 use SandhyR\VilconCore\PlayerManager;
 use Scoreboards\Scoreboards;
 
@@ -36,12 +37,14 @@ class ScoreboardTask  extends Task{
             $api->setLine($player, 1 ,TextFormat::WHITE."Online ".TextFormat::AQUA. count(Server::getInstance()->getOnlinePlayers()));
             $api->setLine($player, 2 ,TextFormat::WHITE."Ping: " . TextFormat::AQUA. $player->getNetworkSession()->getPing());
             $api->setLine($player, 3 ," ");
-            $api->setLine($player, 4 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
-            $api->setLine($player, 5 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
+            $api->setLine($player, 4, TextFormat::WHITE."Level: " . TextFormat::AQUA . LevelManager::$level[$player->getName()]);
+            $api->setLine($player, 5, TextFormat::WHITE . "Coins: " . TextFormat::AQUA . DatabaseControler::$coins[$player->getName()]);
+            $api->setLine($player, 6 ,TextFormat::WHITE."Kill: ".TextFormat::AQUA. DatabaseControler::$kill[$player->getName()]);
+            $api->setLine($player, 7 ,TextFormat::WHITE."Death: ".TextFormat::AQUA. DatabaseControler::$death[$player->getName()]);
             if(DatabaseControler::$kill[$player->getName()] > 0 and DatabaseControler::$death[$player->getName()] > 0) {
-                $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
+                $api->setLine($player, 8, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . round(DatabaseControler::$kill[$player->getName()] / DatabaseControler::$death[$player->getName()], 2));
             } else {
-                $api->setLine($player, 6, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
+                $api->setLine($player, 8, TextFormat::WHITE . "KDR: " . TextFormat::AQUA . DatabaseControler::$kill[$player->getName()]);
             }
             $api->setLine($player, 7 ,TextFormat::AQUA . self::ip);
             break;
