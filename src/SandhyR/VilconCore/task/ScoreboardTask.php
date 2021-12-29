@@ -17,8 +17,8 @@ class ScoreboardTask  extends Task{
     /** @var Player */
     private Player $player;
 
-    const ip = "play.mitikalmc.care";
-    const name = "Mytical";
+    const ip = "myhtical.xyz";
+    const name = "Myhtical";
 
     public function __construct(Player $player)
     {

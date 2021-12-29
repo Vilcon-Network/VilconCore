@@ -1564,4 +1564,23 @@ public static function isVoidFight(Player $player)
     }
     return false;
 }
+
+    public static function isQueue(Player $player)
+    {
+        foreach (self::$unrankqueue as $indeks => $unranks) {
+            foreach ($unranks as $index => $unrank) {
+                if ($unrank == $player->getName()) {
+                    return true;
+                }
+            }
+        }
+        foreach (self::$rankqueue as $indeks => $ranks) {
+            foreach ($ranks as $index => $rank) {
+                if ($rank == $player->getName()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

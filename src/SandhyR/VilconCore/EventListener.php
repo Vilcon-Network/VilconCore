@@ -128,6 +128,7 @@ class EventListener implements Listener
             }
             if ($player->getHealth() <= $event->getFinalDamage()) {
                 if (!Arena::isMatch($player) and !Arena::isMatch($killer)) {
+                    $event->cancel();
                     self::teleportLobby($player);
                     $worldname = $killer->getWorld()->getFolderName();
                     $finalhealth = $killer->getHealth();
@@ -202,11 +203,15 @@ class EventListener implements Listener
         $player->getInventory()->clearAll();
         $player->getArmorInventory()->clearAll();
         $item = new ItemFactory();
-        $player->getInventory()->setItem(0, $item->get(ItemIds::DIAMOND_SWORD)->setCustomName("FFA"));
-        $player->getInventory()->setItem(1, $item->get(ItemIds::IRON_SWORD)->setCustomName("Duels"));
-        $player->getInventory()->setItem(2, $item->get(ItemIds::GOLD_SWORD)->setCustomName("Self Practice"));
-        $player->getInventory()->setItem(4, $item->get(ItemIds::COMPASS)->setCustomName("Cosmetic Shop"));
-        $player->getInventory()->setItem(5, $item->get(ItemIds::RED_FLOWER)->setCustomName("Cosmetic"));
+        if (Arena::isQueue($player)) {
+            $player->getInventory()->setItem(8, $item->get(ItemIds::REDSTONE, 0, 1)->setCustomName("Leave Queue"));
+        } else {
+            $player->getInventory()->setItem(0, $item->get(ItemIds::DIAMOND_SWORD)->setCustomName("FFA"));
+            $player->getInventory()->setItem(1, $item->get(ItemIds::IRON_SWORD)->setCustomName("Duels"));
+            $player->getInventory()->setItem(2, $item->get(ItemIds::GOLD_SWORD)->setCustomName("Self Practice"));
+            $player->getInventory()->setItem(4, $item->get(ItemIds::COMPASS)->setCustomName("Cosmetic Shop"));
+            $player->getInventory()->setItem(5, $item->get(ItemIds::RED_FLOWER)->setCustomName("Cosmetic"));
+        }
     }
 
     public function onInteract(PlayerInteractEvent $event)

@@ -19,6 +19,8 @@ class CombatTask extends Task{
         $this->player1 = $player1;
         $this->player2 = $player2;
         $this->listener = $listener;
+        PlayerManager::$iscombat = true;
+        PlayerManager::$iscombat = true;
 
 }
 

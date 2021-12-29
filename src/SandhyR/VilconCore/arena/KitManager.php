@@ -22,6 +22,8 @@ class KitManager{
         switch ($id){
             case PlayerManager::NODEBUFF_FFA:
                 $player->getInventory()->clearAll();
+                $player->getEffects()->clear();
+                $player->setHealth(20);
                     $sword = $item->get(ItemIds::DIAMOND_SWORD, 0, 1);
                     $helmet = $item->get(ItemIds::DIAMOND_HELMET, 0, 1);
                     $chestplate = $item->get(ItemIds::DIAMOND_CHESTPLATE, 0, 1);
@@ -56,12 +58,16 @@ class KitManager{
                 break;
             case PlayerManager::FIST_FFA:
                 $player->getInventory()->clearAll();
+                $player->getEffects()->clear();
+                $player->setHealth(20);
                 $player->getInventory()->addItem($item->get(ItemIds::STEAK,0,1));
                 break;
             case PlayerManager::COMBO_FFA:
                 break;
             case PlayerManager::SUMO_FFA:
                 $player->getInventory()->clearAll();
+                $player->getEffects()->clear();
+                $player->setHealth(20);
                 $player->getInventory()->addItem($item->get(ItemIds::STEAK,0,1));
                 $player->getEffects()->add(new EffectInstance(VanillaEffects::RESISTANCE(), 60*1000,100,false));
         }

@@ -7,6 +7,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\lang\Translatable;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use SandhyR\VilconCore\arena\Arena;
 use SandhyR\VilconCore\EventListener;
 use SandhyR\VilconCore\PlayerManager;
 
