@@ -1365,49 +1365,51 @@ class Arena
 //
 //                }
 //        }
-        $ids = [PlayerManager::BOXING_DUEL => "boxing", PlayerManager::FIST_DUEL => "fist", PlayerManager::NODEBUFF_DUEL => "nodebuff", PlayerManager::SUMO_DUEL => "sumo", PlayerManager::VOIDFIGHT_DUEL => "voidfight", PlayerManager::GAPPLE_DUEL => "gapple"];
-        $manager = new KitManager();
-        $index = [];
-        foreach (self::$rankqueue[$ids[$id]] as $key => $value) {
-            $index[] = $key;
-        }
-        if (count($index) == 2) {
-            $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[0]]);
-            $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[1]]);
-            if ($p1->isOnline() and $p2->isOnline()) {
-                if ($id == PlayerManager::VOIDFIGHT_DUEL) {
-                    ArenaResetter::reset("voidfight");
-                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
-                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
-                    $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
-                    $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
-                    $manager->sendDuelKit($p1, $id);
-                    $manager->sendDuelKit($p2, $id);
-                    unset(self::$rankqueue[$ids[$id]][$index[0]]);
-                    unset(self::$rankqueue[$ids[$id]][$index[1]]);
-                    if (!isset(self::$match["rank"][$ids[$id]])) {
-                        self::$match["rank"][$ids[$id]] = [];
+        if(self::$duelindex <= 10 ) {
+            $ids = [PlayerManager::BOXING_DUEL => "boxing", PlayerManager::FIST_DUEL => "fist", PlayerManager::NODEBUFF_DUEL => "nodebuff", PlayerManager::SUMO_DUEL => "sumo", PlayerManager::VOIDFIGHT_DUEL => "voidfight", PlayerManager::GAPPLE_DUEL => "gapple"];
+            $manager = new KitManager();
+            $index = [];
+            foreach (self::$rankqueue[$ids[$id]] as $key => $value) {
+                $index[] = $key;
+            }
+            if (count($index) == 2) {
+                $p1 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[0]]);
+                $p2 = Server::getInstance()->getPlayerExact(self::$rankqueue[$ids[$id]][$index[1]]);
+                if ($p1->isOnline() and $p2->isOnline()) {
+                    if ($id == PlayerManager::VOIDFIGHT_DUEL) {
+                        ArenaResetter::reset("voidfight");
+                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("voidfight" . ArenaResetter::$index["voidfight"])->getSafeSpawn());
+                        $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
+                        $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
+                        $manager->sendDuelKit($p1, $id);
+                        $manager->sendDuelKit($p2, $id);
+                        unset(self::$rankqueue[$ids[$id]][$index[0]]);
+                        unset(self::$rankqueue[$ids[$id]][$index[1]]);
+                        if (!isset(self::$match["rank"][$ids[$id]])) {
+                            self::$match["rank"][$ids[$id]] = [];
+                        }
+                    } else {
+                        Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
+                        $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                        $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
+                        $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
+                        $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
+                        $manager->sendDuelKit($p1, $id);
+                        $manager->sendDuelKit($p2, $id);
+                        unset(self::$rankqueue[$ids[$id]][$index[0]]);
+                        unset(self::$rankqueue[$ids[$id]][$index[1]]);
+                        if (!isset(self::$match["rank"][$ids[$id]])) {
+                            self::$match["rank"][$ids[$id]] = [];
+                        }
                     }
-                } else {
-                    Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
-                    $p1->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
-                    $p2->teleport(Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex)->getSafeSpawn());
-                    $p1->teleport(new Vector3(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2]));
-                    $p2->teleport(new Vector3(self::$posduel[1][0], self::$posduel[1][1], self::$posduel[1][2]));
-                    $manager->sendDuelKit($p1, $id);
-                    $manager->sendDuelKit($p2, $id);
-                    unset(self::$rankqueue[$ids[$id]][$index[0]]);
-                    unset(self::$rankqueue[$ids[$id]][$index[1]]);
-                    if (!isset(self::$match["rank"][$ids[$id]])) {
-                        self::$match["rank"][$ids[$id]] = [];
-                    }
+                    self::$match["rank"][$ids[$id]][$p1->getName()] = $p2->getName();
+                    self::$match["rank"][$ids[$id]][$p2->getName()] = $p1->getName();
+                    ++self::$duelindex;
+                    PlayerManager::$playerstatus[$p1->getName()] = $id;
+                    PlayerManager::$playerstatus[$p2->getName()] = $id;
+                    Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
                 }
-                self::$match["rank"][$ids[$id]][$p1->getName()] = $p2->getName();
-                self::$match["rank"][$ids[$id]][$p2->getName()] = $p1->getName();
-                ++self::$duelindex;
-                PlayerManager::$playerstatus[$p1->getName()] = $id;
-                PlayerManager::$playerstatus[$p2->getName()] = $id;
-                Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
             }
         }
 
@@ -1546,12 +1548,15 @@ class Arena
 //    }
 
 public static function duelBot(Player $player, int $id){
-        Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
-        $location = new Location(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2], Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex),$player->getLocation()->getYaw(), $player->getLocation()->getPitch());
-        $player->teleport($location);
-        KitManager::sendDuelKit($player, PlayerManager::NODEBUFF_DUEL);
-        Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelBotTask($player, $id), 20);
-
+        if(self::$duelindex <= 10) {
+            Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
+            $location = new Location(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2], Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex), $player->getLocation()->getYaw(), $player->getLocation()->getPitch());
+            $player->teleport($location);
+            KitManager::sendDuelKit($player, PlayerManager::NODEBUFF_DUEL);
+            Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelBotTask($player, $id), 20);
+        } else {
+            $player->sendMessage("Arena full!");
+        }
 
 }
 

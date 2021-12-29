@@ -18,6 +18,7 @@ use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerMoveEvent;
@@ -706,6 +707,85 @@ class EventListener implements Listener
                     $player->setHealth($player->getHealth() + 4);
                 }
             }
+        }
+    }
+
+    public function onUse(PlayerItemUseEvent $event){
+        $player = $event->getPlayer();
+        $id = $event->getItem()->getId();
+        switch ($id) {
+            case ItemIds::DIAMOND_SWORD:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    if (!isset($this->delay[$player->getName()])) {
+                        $form = new FormManager();
+                        $form->ffaForm($player);
+                        $this->delay[$player->getName()] = time();
+                    } else {
+                        if ($this->delay[$player->getName()] < time()) {
+                            unset($this->delay[$player->getName()]);
+                        }
+                    }
+
+                }
+                break;
+            case ItemIds::IRON_SWORD:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    if (!isset($this->delay[$player->getName()])) {
+                        $form = new FormManager();
+                        $form->duelsForm($player);
+                        $this->delay[$player->getName()] = time();
+                    } else {
+                        if ($this->delay[$player->getName()] < time()) {
+                            unset($this->delay[$player->getName()]);
+                        }
+                    }
+                }
+                break;
+            case ItemIds::GOLD_SWORD:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    if (!isset($this->delay[$player->getName()])) {
+                        $form = new FormManager();
+                        $form->botForm($player);
+                        $this->delay[$player->getName()] = time();
+                    } else {
+                        if ($this->delay[$player->getName()] < time()) {
+                            unset($this->delay[$player->getName()]);
+                        }
+                    }
+                }
+                break;
+            case ItemIds::REDSTONE:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    Arena::unsetQueue($player);
+                    $player->getInventory()->clearAll();
+                    self::sendItem($player);
+                }
+                break;
+            case ItemIds::COMPASS:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    if (!isset($this->delay[$player->getName()])) {
+                        $form = new FormManager();
+                        $form->cosmeticshop($player);
+                        $this->delay[$player->getName()] = time();
+                    } else {
+                        if ($this->delay[$player->getName()] < time()) {
+                            unset($this->delay[$player->getName()]);
+                        }
+                    }
+                }
+                break;
+            case ItemIds::RED_FLOWER:
+                if ($player->getWorld()->getFolderName() == Main::getInstance()->getLobby()) {
+                    if (!isset($this->delay[$player->getName()])) {
+                        $form = new FormManager();
+                        $form->usecosmeticform($player);
+                        $this->delay[$player->getName()] = time();
+                    } else {
+                        if ($this->delay[$player->getName()] < time()) {
+                            unset($this->delay[$player->getName()]);
+                        }
+                    }
+                }
         }
     }
 }
