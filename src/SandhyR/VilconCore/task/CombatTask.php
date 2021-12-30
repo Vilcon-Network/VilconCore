@@ -74,7 +74,7 @@ class CombatTask extends Task{
 
     public function onCancel(): void
     {
-       unset(PlayerManager::$playerstatus[$this->player1->getName()]);
-       unset(PlayerManager::$playerstatus[$this->player2->getName()]);
+       unset(PlayerManager::$iscombat[$this->player1->getName()]);
+       unset(PlayerManager::$iscombat[$this->player2->getName()]);
     }
 }
