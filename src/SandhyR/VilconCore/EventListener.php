@@ -459,7 +459,7 @@ class EventListener implements Listener
                     LevelManager::addExp($killer, mt_rand(20, 50));
                 }
             }
-            self::teleportLobby($player);
+            $player->teleport($player->getWorld()->getSafeSpawn());
         }
     }
 
