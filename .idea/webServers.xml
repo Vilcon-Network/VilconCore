@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9495afae-11cb-4811-9b67-1f0652afa638" name="Myhtical">
+        <fileTransfer rootFolder="/root/pmmp/plugins" accessType="SFTP" host="myhtical.xyz" port="22" sshConfigId="a022c0bd-e177-4cd3-9d0d-de875c30ff13" sshConfig="root@myhtical.xyz:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
