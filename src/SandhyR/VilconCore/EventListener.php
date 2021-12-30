@@ -14,6 +14,7 @@ use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
@@ -787,5 +788,9 @@ class EventListener implements Listener
                     }
                 }
         }
+    }
+
+    public function onPlayerCreation(PlayerCreationEvent $event){
+
     }
 }
