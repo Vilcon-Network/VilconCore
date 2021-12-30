@@ -1554,6 +1554,7 @@ public static function duelBot(Player $player, int $id){
             $player->teleport($location);
             KitManager::sendDuelKit($player, PlayerManager::NODEBUFF_DUEL);
             Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelBotTask($player, $id), 20);
+            ++self::$duelindex;
         } else {
             $player->sendMessage("Arena full!");
         }

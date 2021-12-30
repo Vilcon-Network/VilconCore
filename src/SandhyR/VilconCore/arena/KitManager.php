@@ -60,7 +60,7 @@ class KitManager{
                 $player->getInventory()->clearAll();
                 $player->getEffects()->clear();
                 $player->setHealth(20);
-                $player->getInventory()->addItem($item->get(ItemIds::STEAK,0,1));
+                $player->getInventory()->setItem(0,$item->get(ItemIds::STEAK,0,1));
                 break;
             case PlayerManager::COMBO_FFA:
                 break;

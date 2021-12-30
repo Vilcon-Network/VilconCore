@@ -153,7 +153,7 @@ class EventListener implements Listener
                         $dm = $player->getDisplayName() . " §7Was " . $messages[array_rand($messages)] . " §7By§b " . $killer->getDisplayName() . " §6[" . $finalhealth . " HP]";
                     }
                     Server::getInstance()->broadcastMessage($dm);
-                    $manager->sendKit($player, PlayerManager::$playerstatus[$player->getName()]);
+                    $manager->sendKit($killer, PlayerManager::$playerstatus[$killer->getName()]);
                 } else {
                     if(Arena::isVoidFight($player) and Arena::isVoidFight($player)){
                         if(isset(Game::$bed[$player->getName()]) and isset(Game::$bed[$killer->getName()])){
