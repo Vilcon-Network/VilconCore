@@ -9,7 +9,6 @@ class PlayerManager {
     /** @var int[] */
     public static $playerstatus = [];
 
-    /** @var bool[] */
     public static $iscombat = [];
 
     /** @var bool[] */
