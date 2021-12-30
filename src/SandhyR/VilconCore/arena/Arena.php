@@ -679,8 +679,11 @@ class Arena
 //                }
 //        }
         ++self::$duelindex;
-        WorldUtils::duplicateWorld("duel0", "dpduel" . self::$duelindex);
-        WorldUtils::renameWorld("dpduel" . self::$duelindex, "duel" . self::$duelindex);
+        try {
+            WorldUtils::duplicateWorld("duel0", "dpduel" . self::$duelindex);
+            WorldUtils::renameWorld("dpduel" . self::$duelindex, "duel" . self::$duelindex);
+        } catch (\ErrorException){
+        }
         $ids = [PlayerManager::BOXING_DUEL => "boxing", PlayerManager::FIST_DUEL => "fist", PlayerManager::NODEBUFF_DUEL => "nodebuff", PlayerManager::SUMO_DUEL => "sumo", PlayerManager::VOIDFIGHT_DUEL => "voidfight", PlayerManager::GAPPLE_DUEL => "gapple"];
         $manager = new KitManager();
         $index = [];
@@ -721,7 +724,6 @@ class Arena
                 }
                     self::$match["unrank"][$ids[$id]][$p1->getName()] = $p2->getName();
                     self::$match["unrank"][$ids[$id]][$p2->getName()] = $p1->getName();
-                    ++self::$duelindex;
                     PlayerManager::$playerstatus[$p1->getName()] = $id;
                     PlayerManager::$playerstatus[$p2->getName()] = $id;
                     Main::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelTask($p1, $p2), 20);
@@ -1370,8 +1372,11 @@ class Arena
 //                }
 //        }
         ++self::$duelindex;
-        WorldUtils::duplicateWorld("duel0", "dpduel" . self::$duelindex);
-        WorldUtils::renameWorld("dpduel" . self::$duelindex, "duel" . self::$duelindex);
+        try {
+            WorldUtils::duplicateWorld("duel0", "dpduel" . self::$duelindex);
+            WorldUtils::renameWorld("dpduel" . self::$duelindex, "duel" . self::$duelindex);
+        }catch(\ErrorException $exception) {
+        }
         $ids = [PlayerManager::BOXING_DUEL => "boxing", PlayerManager::FIST_DUEL => "fist", PlayerManager::NODEBUFF_DUEL => "nodebuff", PlayerManager::SUMO_DUEL => "sumo", PlayerManager::VOIDFIGHT_DUEL => "voidfight", PlayerManager::GAPPLE_DUEL => "gapple"];
         $manager = new KitManager();
         $index = [];
@@ -1552,8 +1557,11 @@ class Arena
 
 public static function duelBot(Player $player, int $id){
         ++self::$duelindex;
+    try {
         WorldUtils::duplicateWorld("duel0", "dpduel" . self::$duelindex);
         WorldUtils::renameWorld("dpduel" . self::$duelindex, "duel" . self::$duelindex);
+    }catch(\ErrorException $exception){
+    }
         Server::getInstance()->getWorldManager()->loadWorld("duel" . self::$duelindex);
         $location = new Location(self::$posduel[0][0], self::$posduel[0][1], self::$posduel[0][2], Server::getInstance()->getWorldManager()->getWorldByName("duel" . self::$duelindex), $player->getLocation()->getYaw(), $player->getLocation()->getPitch());
         $player->teleport($location);

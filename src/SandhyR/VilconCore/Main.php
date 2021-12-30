@@ -87,7 +87,11 @@ class Main extends PluginBase{
         KitManager::$kit["combo"] = [];
         KitManager::$kit["builduhc"] = [];
         KitManager::$kit["voidfight"] = [];
-        KitManager::$kit["blockin"] = []; 
+        KitManager::$kit["blockin"] = [];
+        foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world){
+            $world->setTime(1000);
+            $world->stopTime();
+        }
     }
 
     /** @return Main */
@@ -139,6 +143,7 @@ class Main extends PluginBase{
             foreach (range(1, ArenaResetter::$index["voidfight"]) as $item) {
                 ArenaResetter::removeWorld("voidfight" . $item);
             }
+
         } catch (\ErrorException|\UnexpectedValueException $exception) {
 
         }

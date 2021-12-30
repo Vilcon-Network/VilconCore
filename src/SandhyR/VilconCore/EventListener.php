@@ -11,6 +11,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\event\entity\ItemDespawnEvent;
 use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -169,6 +170,7 @@ class EventListener implements Listener
                     if(Arena::isRankDuel($player) and Arena::isRankDuel($killer)){
                         $this->addEloToProperty($killer, mt_rand(10, 20));
                     }
+                    $event->cancel();
                     self::teleportLobby($player);
                     $killer->sendTitle(TextFormat::GOLD . "VICTORY");
                     $killer->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
@@ -194,6 +196,7 @@ class EventListener implements Listener
             if ($player->getHealth() <= $event->getFinalDamage()) {
                 $player->sendMessage(TextFormat::GREEN . "Winner: " . TextFormat::RESET . $killer->getName() . "\n" . TextFormat::RED . "Loser: " . TextFormat::RESET . $player->getName());
                 self::teleportLobby($player);
+                --Arena::$duelindex;
                 $event->cancel();
             }
         }
@@ -793,5 +796,9 @@ class EventListener implements Listener
 
     public function onPlayerCreation(PlayerCreationEvent $event){
         $event->setPlayerClass(VilconPlayer::class);
+    }
+
+    public function onPadi(ItemDespawnEvent $event){
+        $event->cancel();
     }
 }
