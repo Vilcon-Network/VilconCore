@@ -42,6 +42,7 @@ use SandhyR\VilconCore\arena\KitManager;
 use SandhyR\VilconCore\database\Database;
 use SandhyR\VilconCore\database\DatabaseControler;
 use SandhyR\VilconCore\game\Game;
+use SandhyR\VilconCore\player\VilconPlayer;
 use SandhyR\VilconCore\task\AFKTask;
 use SandhyR\VilconCore\task\KronTask;
 use SandhyR\VilconCore\task\NametagTask;
@@ -791,6 +792,6 @@ class EventListener implements Listener
     }
 
     public function onPlayerCreation(PlayerCreationEvent $event){
-
+        $event->setPlayerClass(VilconPlayer::class);
     }
 }
